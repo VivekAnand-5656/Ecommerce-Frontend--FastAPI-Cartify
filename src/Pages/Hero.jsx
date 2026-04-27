@@ -10,26 +10,25 @@ import women from '../images/women.png'
 import men from '../images/men.png'
 import elctronics from '../images/ect.png'
 import shoes from '../images/sh.png'
-import tr1 from '../images/tr1.jpg'
-import tr2 from '../images/tr2.jpg'
-import tr3 from '../images/tr3.jpg'
-import tr4 from '../images/tr4.jpg'
-import tr5 from '../images/tr5.jpg'
-import tr6 from '../images/tr6.jpg'
-import tr7 from '../images/tr7.jpg'
-import tr8 from '../images/tr8.jpg'
+import sale1 from '../images/sale1.png'
+import sale2 from '../images/sale2.png'
+import sale3 from '../images/sale3.png'
 import { FaCircleArrowRight } from "react-icons/fa6";
 
+import { Carousel } from 'react-responsive-carousel'
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Catagories from '../components/Catagories'
 
 const Hero = () => {
     const { token } = useContext(AuthContext)
     const [products, setProducts] = useState([])
-    const [newArrivalProducts,setNewArrivalProducts] = useState([])
+    const [newArrivalProducts, setNewArrivalProducts] = useState([])
+
 
     const images = [boy, boy2, boy3, boy4, boy5]
     const [active, setActive] = useState(null)
 
-    const trending = [tr1,tr2,tr3,tr4,tr5,tr6,tr7,tr8]
+    const megasales = [sale1, sale2, sale3]
 
     const catg = [
         { img: women, name: "Women Fashion" },
@@ -37,11 +36,12 @@ const Hero = () => {
         { img: elctronics, name: "Electronics" },
         { img: shoes, name: "Shoes" }
     ]
-// ---- All Products Fetch ------
+    // ---- All Products Fetch ------
+    const api_base = "http://127.0.0.1:8000/users"
     const fetchProducts = async () => {
         try {
             console.log("Started")
-            const productRes = await axios.get("http://127.0.0.1:8000/users/products",
+            const productRes = await axios.get(`${api_base}/products`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -49,24 +49,25 @@ const Hero = () => {
                 }
             )
             console.log("Products:- ", productRes.data)
-            
+
 
             setProducts(productRes.data)
         } catch (error) {
             console.log(`Error:- ${error}`)
 
         }
-    }
+    } 
     useEffect(() => {
         fetchProducts()
+        fetchAllProducts()
     }, [])
 
     // ------ Fetch New Arrival Products -----------
-    const fetchNewArrivalProducts = async ()=>{
+    const fetchNewArrivalProducts = async () => {
         try {
-            const arrivalRes = await axios.get("http://127.0.0.1:8000/users/allnewarrivalproducts",
+            const arrivalRes = await axios.get(`${api_base}/allnewarrivalproducts`,
                 {
-                    headers:{
+                    headers: {
                         Authorization: `Bearer ${token}`
                     }
                 }
@@ -78,36 +79,15 @@ const Hero = () => {
             console.log(`Error:- ${error}`)
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         fetchNewArrivalProducts()
-    },[])
+    }, [])
 
     return (
         <>
-            <div className="p-4 flex flex-col gap-2 ">
-
-                {/* <div className="grid grid-cols-4 gap-4">
-                        {
-                            products.map((item) => (
-                                <div key={item.id} className="border p-3 rounded shadow">
-
-                                    <img
-                                        src={item.image}
-                                        alt={item.name}
-                                        className="h-40 w-full object-cover"
-                                    />
-
-                                    <h2 className="font-semibold mt-2">{item.name}</h2>
-                                    <p className="text-green-600 font-bold">₹ {item.price}</p>
-
-                                    <button className="bg-black text-white px-3 py-1 mt-2 rounded">
-                                        Add to Cart
-                                    </button>
-
-                                </div>
-                            ))
-                        }
-                    </div> */}
+            <div className="p-4 flex flex-col gap-2 "> 
+                {/* === Catagory === */}
+                <Catagories/>
                 {/* ---- Main ---- */}
                 <div className='bg-[#077979]  h-[70vh] text-white flex justify-around items-center rounded-2xl ' >
                     <div className=' w-[50%] h-full flex flex-col justify-center items-center p-2 ' >
@@ -140,6 +120,30 @@ const Hero = () => {
                         </div>
                     </div>
                 </div>
+                 {/* ======= Mega Sales Offer ====== */}
+                 
+                <div className=' w-full p-3 flex justify-center items-center rounded-2xl  ' >
+                    <Carousel
+                    className=' w-[70%] rounded-2xl bg-red-500 '
+                        autoPlay
+                        infiniteLoop
+                        showThumbs={false}
+                        showStatus={false}
+                        interval={3000}
+                    >
+                        <div>
+                            <img src={sale1} className="h-100 object-cover rounded-2xl " />
+                        </div>
+
+                        <div>
+                            <img src={sale2} className="h-100 object-cover rounded-2xl" />
+                        </div>
+
+                        <div>
+                            <img src={sale3} className="h-100 object-cover rounded-2xl" />
+                        </div>
+                    </Carousel>
+                </div>
                 {/* ------------ Catagories ------------ */}
                 <h1 className=' text-2xl font-bold text-center ' >Shop By Catagories</h1>
 
@@ -158,34 +162,25 @@ const Hero = () => {
                 </div>
                 {/* ----------- New Arrivals Section ----------- */}
                 <h1 className=' text-2xl font-bold text-center ' >New Arrivals</h1>
-                {/* <div className='bg-[#F2F2F2] w-full h-screen gap-3 p-3 flex flex-wrap  justify-center items-center rounded-2xl  ' >
-                    {
-                        trending.map((item, index) => (
-                            <div key={index}
-                                className='w-[20%] gap-2 bg-[#ffffff] rounded-2xl h-[45%] cursor-pointer flex justify-center items-center hover:scale-105 transition-all duration-100 ease-in-out hover:shadow-2xl hover:shadow-[#077979] ' >
-                                <img src={item}
-                                    className=' w-full h-full rounded-2xl '
-                                    alt="" /> 
-                            </div>
-                        ))
-                    }
-                </div> */}
+
                 <div className='bg-[#F2F2F2] w-full h-screen gap-8 p-3 flex flex-wrap justify-center items-center rounded-2xl  ' >
                     {
                         newArrivalProducts.map((item, index) => (
                             <div key={index}
                                 className='w-[18%] gap-2 bg-[#ffffff] rounded-2xl p-2 h-[45%] cursor-pointer relative flex flex-col justify-center items-center hover:scale-105 transition-all duration-100 ease-in-out hover:shadow-sm hover:shadow-[#6f7373] ' >
-                                    <div className=' bg-[#ffef0a] font-semibold absolute top-0 left-0 -skew-6 rounded p-0.5 ' >Trending</div> 
+                                <div className=' bg-[#ffef0a] font-semibold absolute top-0 left-0 -skew-6 rounded p-0.5 ' >Trending</div>
                                 <img src={item.image}
                                     className=' w-full h-[50%] rounded-2xl '
-                                    alt="" /> 
-                                    <p>{item.name}</p>
-                                    <p>Rs. {item.price}</p>
+                                    alt="" />
+                                <p>{item.name}</p>
+                                <p>Rs. {item.price}</p>
                             </div>
                         ))
                     }
                 </div>
-
+                {/* ======= All Products ====== */}
+                
+               
             </div>
         </>
     )

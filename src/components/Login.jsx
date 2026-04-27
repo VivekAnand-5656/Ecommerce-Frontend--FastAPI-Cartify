@@ -15,12 +15,12 @@ const Login = () => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     }
-
+    const api_base = "http://127.0.0.1:8000/users"
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
             console.log("Before API Call")
-            const loginRes = await axios.post("http://127.0.0.1:8000/users/login", formData)
+            const loginRes = await axios.post(`${api_base}/login`, formData)
 
             console.log("Login Done :- ", loginRes.data.id)
             login(loginRes.data.token)
