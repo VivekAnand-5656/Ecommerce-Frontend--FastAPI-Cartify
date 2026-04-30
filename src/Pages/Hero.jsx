@@ -15,13 +15,14 @@ import sale2 from '../images/sale2.png'
 import sale3 from '../images/sale3.png'
 import { FaCircleArrowRight } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
+import { toast, Bounce } from 'react-toastify'
 
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Catagories from '../components/Catagories'
 
 const Hero = () => {
-    const { token } = useContext(AuthContext)
+    const { token, cartlength, setCartlength } = useContext(AuthContext)
     const [products, setProducts] = useState([])
     const [newArrivalProducts, setNewArrivalProducts] = useState([])
 
@@ -37,8 +38,10 @@ const Hero = () => {
         { img: elctronics, name: "Electronics" },
         { img: shoes, name: "Shoes" }
     ]
+
     // ---- All Products Fetch ------
     const api_base = "https://e-commerce-project-3365.onrender.com/users"
+    const BASE_URL = "https://e-commerce-project-3365.onrender.com"
     const fetchProducts = async () => {
         try {
             console.log("Started")
@@ -81,6 +84,51 @@ const Hero = () => {
     }
     useEffect(() => {
         fetchNewArrivalProducts()
+    }, [])
+    // ================ Add to Cart ===========
+    const addCart = async (id) => {
+        try {
+            console.log("Cart Adding.....")
+            const cartRes = await axios.post(`${api_base}/addtocart/${id}`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            console.log("Cart Added Successfully :- ", cartRes.data)
+            toast.success("Cart Added Successfully 🎉", {
+                position: "top-center",
+                autoClose: 2000,
+                transition: Bounce
+            });
+        } catch (error) {
+            console.log(`Error:- ${error}`)
+            toast.error("Cart not added !", {
+                position: "top-center",
+                autoClose: 2000,
+                transition: Bounce
+            });
+        }
+    }
+    // ======= Cart Length ======
+    const cartSize = async () => {
+        try {
+            const sizeres = await axios.get(`${api_base}/user-cart`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            console.log("Size of Cart :- ", sizeres.data.length)
+            setCartlength(sizeres.data.length)
+        } catch (error) {
+            console.log(`Error:- ${error}`)
+        }
+    }
+    useEffect(() => {
+        cartSize()
     }, [])
 
     return (
@@ -163,7 +211,7 @@ const Hero = () => {
                 {/* ----------- New Arrivals Section ----------- */}
                 <h1 className=' text-2xl font-bold text-center ' >New Arrivals</h1>
 
-                <div className=' w-full h-screen gap-8 p-3 flex flex-wrap justify-center items-center rounded-2xl  ' >
+                <div className=' w-full h-auto gap-8 p-3 flex flex-wrap justify-center items-center rounded-2xl  ' >
                     {
                         newArrivalProducts.length === 0 ?
                             <h1>No Products</h1>
@@ -207,7 +255,7 @@ const Hero = () => {
                                 <div className="overflow-hidden rounded-t-2xl">
                                     <img
                                         // src={sale1}
-                                        src={item.image}
+                                        src={`${BASE_URL}/${item.image}`}
                                         alt='loading....'
                                         className="w-full h-56 object-cover group-hover:scale-110 transition duration-300"
                                     />
@@ -238,7 +286,9 @@ const Hero = () => {
                                     </div>
 
                                     {/* <!-- Add to Cart --> */}
-                                    <button className="mt-3 w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition">
+                                    <button
+                                        onClick={() => addCart(item.id)}
+                                        className="mt-3 w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition">
                                         Add to Cart
                                     </button>
 

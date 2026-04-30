@@ -55,6 +55,8 @@ const AddProduct = () => {
             )
 
             console.log(res.data)
+            console.log("Image URL:- ", res.data.image);
+            
 
             toast.success("Product Added Successfully 🎉", {
                 position: "top-center",

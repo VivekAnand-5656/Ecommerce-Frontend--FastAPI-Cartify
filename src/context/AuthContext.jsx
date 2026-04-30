@@ -4,6 +4,7 @@ export const AuthContext = createContext();
 const AuthProvider = ({children}) => {
     const [token, setToken] = useState(() => localStorage.getItem("token"));
     const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"));
+    const [cartlength,setCartlength] = useState(0)
 
     const login = (jwt)=>{
         setToken(jwt)
@@ -19,7 +20,7 @@ const AuthProvider = ({children}) => {
   return ( 
     <AuthContext.Provider value={
         {
-            token,isLoggedIn,login,logout
+            token,isLoggedIn,login,logout,cartlength,setCartlength
         }
     } >
         {children}

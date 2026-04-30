@@ -7,7 +7,8 @@ import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
     const navigate = useNavigate()
-    const { isLoggedIn, logout } = useContext(AuthContext)
+    const { isLoggedIn, logout, cartlength } = useContext(AuthContext)
+    
 
     return (
         <div className='w-full h-[10vh] bg-white shadow-2xl flex justify-between items-center p-2'>
@@ -52,13 +53,27 @@ const Navbar = () => {
                 </li>
 
             </ul>
-            <div className=' w-[10%] flex justify-center items-center gap-2  ' >
-                <NavLink to="wishlist" >
-                    <FaRegHeart className=' text-red-500 ' />
-                </NavLink>
-                <NavLink to="cart">
-                    <FaShoppingCart className='text-blue-900 ' />
-                </NavLink>
+            <div className=' w-[10%] flex justify-center items-center gap-3  ' >
+                <div className="relative">
+                    <NavLink to="wishlist">
+                        <FaRegHeart className=' text-red-500 text-[0.9rem] ' />
+                    </NavLink>
+
+                    {/* Badge */}
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[0.5rem] px-1.5 rounded-full">
+                        0
+                    </span>
+                </div>
+                <div className="relative">
+                    <NavLink to="cart">
+                        <FaShoppingCart className="text-blue-900 text-[0.9rem] " />
+                    </NavLink>
+
+                    {/* Badge */}
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[0.5rem] px-1.5 rounded-full">
+                        {cartlength}
+                    </span>
+                </div>
 
 
             </div>
