@@ -6,9 +6,9 @@ import Footer from '../components/Footer'
 const Layout = () => {
   return (
     <>
-    <header><Navbar/></header>
-    <main className='hero' ><Outlet/></main>
-    <footer><Footer/></footer>
+      <header><Navbar /></header>
+      <main className='hero' ><Outlet /></main>
+      <footer><Footer /></footer>
     </>
   )
 }

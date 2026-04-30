@@ -7,15 +7,16 @@ import { toast, Bounce } from 'react-toastify'
 const Login = () => {
     const navigate = useNavigate()
     const { login } = useContext(AuthContext)
-    const [formData, setFormData] = useState({
+    const [formData, setformData] = useState({
         email: "",
         password: ""
     })
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setformData({ ...formData, [name]: value });
     }
-    const api_base = "http://127.0.0.1:8000/users"
+    const api_base = "https://e-commerce-project-3365.onrender.com/users"
+
     const handleLogin = async (e) => {
         e.preventDefault()
         try {
@@ -35,12 +36,12 @@ const Login = () => {
                 theme: "light",
                 transition: Bounce,
             });
-            setFormData({
+            setformData({
                 email: "",
                 password: ""
             })
             navigate("/")
-            
+
         } catch (error) {
             console.log(`Error :- ${error}`)
         }
@@ -48,25 +49,59 @@ const Login = () => {
 
     return (
         <>
-            <div className=' bg-[#25e1e8] w-full h-[90vh] p-2 flex flex-col justify-center items-center ' >
-                <h1>Welcome to CartiFy</h1>
-                <form
-                    onSubmit={handleLogin}
-                    className='bg-white w-[30%] flex flex-col p-2 gap-2 rounded border ' >
-                    <label htmlFor="">Email</label>
-                    <input type="email" name='email' placeholder='example@gmail.com' required
-                        value={formData.email}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="">Password</label>
-                    <input type="password" name='password' placeholder='*********' required
-                        value={formData.password}
-                        onChange={handleChange}
-                    />
-                    <button
-                        type='submit'
-                    >Login</button>
-                </form>
+            <div className="w-full min-h-screen bg-[#EAEAEA] flex justify-center items-center p-6">
+
+                <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+
+                    <h1 className="text-3xl font-bold text-center mb-6">
+                        Welcome to <span className="text-green-500">CartiFy</span>
+                    </h1>
+
+                    <form
+                        onSubmit={handleLogin}
+                        className="flex flex-col gap-4"
+                    >
+
+                        <div className="flex flex-col gap-1">
+                            <label className="font-medium">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="example@gmail.com"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                className="px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-green-400"
+                            />
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                            <label className="font-medium">Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="********"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                                className="px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-green-400"
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="mt-4 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition duration-300"
+                        >
+                            Login
+                        </button>
+
+                        <p className="text-center text-sm text-gray-500">
+                            Don't have an account? <span className="text-green-500 cursor-pointer" onClick={() => navigate("/signup")} >Sign up</span>
+                        </p>
+
+                    </form>
+
+                </div>
             </div>
         </>
     )

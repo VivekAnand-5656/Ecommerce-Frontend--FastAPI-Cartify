@@ -3,11 +3,11 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { FaRegHeart } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
-import {AuthContext} from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
     const navigate = useNavigate()
-    const { isLoggedIn,logout } = useContext(AuthContext)
+    const { isLoggedIn, logout } = useContext(AuthContext)
 
     return (
         <div className='w-full h-[10vh] bg-white shadow-2xl flex justify-between items-center p-2'>
@@ -20,7 +20,7 @@ const Navbar = () => {
                 className=' border-2 border-[#20194a] p-1.5 rounded w-[30%] ' />
 
             {/* Menu */}
-            <ul className='w-[40%] h-full flex justify-center items-center gap-5'>
+            <ul className='w-[40%] h-full flex justify-center text-[0.9rem] items-center gap-5'>
                 <li>
                     <NavLink className={({ isActive }) => isActive ? "text-[#180cff] font-semibold" : "font-semibold"} to="/">
                         Home
@@ -45,11 +45,22 @@ const Navbar = () => {
                         <option value="">Shoes & Footwear</option>
                     </select>
                 </li>
+                <li>
+                    <NavLink className={({ isActive }) => isActive ? "text-[#180cff] font-semibold" : "font-semibold"} to="/addproduct">
+                        Add Product
+                    </NavLink>
+                </li>
 
             </ul>
             <div className=' w-[10%] flex justify-center items-center gap-2  ' >
-                <FaRegHeart className=' text-red-500 ' />
-                <FaShoppingCart className='text-blue-900 ' />
+                <NavLink to="wishlist" >
+                    <FaRegHeart className=' text-red-500 ' />
+                </NavLink>
+                <NavLink to="cart">
+                    <FaShoppingCart className='text-blue-900 ' />
+                </NavLink>
+
+
             </div>
 
             {
@@ -58,8 +69,8 @@ const Navbar = () => {
                     <>
                         <div className='flex justify-center items-center gap-3 w-[20%]'>
                             <button
-                            onClick={logout}
-                                className='px-4 py-1 bg-black text-white rounded-md cursor-pointer'>Logout</button>
+                                onClick={logout}
+                                className='px-4 py-1 bg-[#377DF0] font-semibold text-white rounded-md cursor-pointer'>Logout</button>
                             <FaUserCircle className=' text-3xl cursor-pointer text-[#0b0348] ' />
                         </div>
                     </>
