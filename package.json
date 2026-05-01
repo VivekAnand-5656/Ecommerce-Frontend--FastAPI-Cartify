@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.15.2",
+    "lottie-react": "^2.4.1",
     "prop-types": "^15.8.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
