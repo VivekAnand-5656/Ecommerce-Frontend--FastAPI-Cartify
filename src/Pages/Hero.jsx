@@ -25,6 +25,7 @@ const Hero = () => {
     const { token, cartlength, setCartlength } = useContext(AuthContext)
     const [products, setProducts] = useState([])
     const [newArrivalProducts, setNewArrivalProducts] = useState([])
+    const [loading,setLoading] = useState(true)
 
 
     const images = [boy, boy2, boy3, boy4, boy5]
@@ -45,6 +46,7 @@ const Hero = () => {
     const fetchProducts = async () => {
         try {
             console.log("Started")
+            setLoading(true)
             const productRes = await axios.get(`${api_base}/products`,
                 {
                     headers: {
@@ -58,6 +60,7 @@ const Hero = () => {
             setProducts(productRes.data)
         } catch (error) {
             console.log(`Error:- ${error}`)
+            setLoading(false)
 
         }
     }
@@ -85,32 +88,6 @@ const Hero = () => {
     useEffect(() => {
         fetchNewArrivalProducts()
     }, [])
-    // ================ Add to Cart ===========
-    const addCart = async (id) => {
-        try {
-            console.log("Cart Adding.....")
-            const cartRes = await axios.post(`${api_base}/addtocart/${id}`, {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            )
-            console.log("Cart Added Successfully :- ", cartRes.data)
-            toast.success("Cart Added Successfully 🎉", {
-                position: "top-center",
-                autoClose: 2000,
-                transition: Bounce
-            });
-        } catch (error) {
-            console.log(`Error:- ${error}`)
-            toast.error("Cart not added !", {
-                position: "top-center",
-                autoClose: 2000,
-                transition: Bounce
-            });
-        }
-    }
     // ======= Cart Length ======
     const cartSize = async () => {
         try {
@@ -130,6 +107,35 @@ const Hero = () => {
     useEffect(() => {
         cartSize()
     }, [])
+    // ================ Add to Cart ===========
+    const addCart = async (id) => {
+        try {
+            console.log("Cart Adding.....")
+            const cartRes = await axios.post(`${api_base}/addtocart/${id}`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            console.log("Cart Added Successfully :- ", cartRes.data)
+
+            toast.success("Cart Added Successfully 🎉", {
+                position: "top-center",
+                autoClose: 2000,
+                transition: Bounce
+            });
+            await cartSize()
+        } catch (error) {
+            console.log(`Error:- ${error}`)
+            toast.error("Cart not added !", {
+                position: "top-center",
+                autoClose: 2000,
+                transition: Bounce
+            });
+        }
+    }
+    
 
     return (
         <>
@@ -243,7 +249,8 @@ const Hero = () => {
                 {/* ======= All Products ====== */}
                 <div className=' flex flex-wrap w-full justify-center items-center gap-2 ' >
                     {
-                        products.map((item, index) => (
+                        loading ?(
+                            products.map((item, index) => (
                             <div key={index} className="w-64 h-100 p-2 bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 relative group">
 
                                 {/* <!-- Discount Badge --> */}
@@ -295,6 +302,9 @@ const Hero = () => {
                                 </div>
                             </div>
                         ))
+                        ):(
+                            <p>Loading.......</p>
+                        )
                     }
 
                 </div>
