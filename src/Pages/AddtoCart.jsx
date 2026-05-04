@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import emptycart from '../images/empty.png'
 import axios from 'axios'
 import { toast, Bounce } from 'react-toastify'
@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 const AddtoCart = () => {
-  const { token } = useContext(AuthContext)
+  const { token, setCartlength } = useContext(AuthContext)
   const [allCarts, setAllCarts] = useState([])
   const [total, setTotal] = useState(0)
   const navigate = useNavigate()
@@ -36,10 +36,9 @@ const AddtoCart = () => {
     }
   }
   // ===== Total of CartTotal =======
-  let sum = 0
-  for (const product of allCarts) {
-    sum += product.carttotal
-  }
+  const sum = useMemo(() => {
+    return allCarts.reduce((acc, item) => acc + item.carttotal, 0)
+  }, [allCarts])
   console.log(`Sum :- ${sum}`)
 
   // ======= Increase Quantity ======= 
@@ -87,12 +86,13 @@ const AddtoCart = () => {
       )
       console.log("Cart Removed")
       await fetchAllCarts()
-      toast.success("Cart Added Successfully 🎉", {
+      setCartlength(prev => prev - 1)
+      toast.success("Item removed from cart 🗑️", {
         position: "top-center",
         autoClose: 2000,
         transition: Bounce
       });
-      
+
     } catch (error) {
       console.log(`Error:- ${error}`)
     }
@@ -100,6 +100,8 @@ const AddtoCart = () => {
   // ===== Clear ALl Cart ======
   const clearCart = async () => {
     try {
+      setAllCarts([])
+      setCartlength(0)
       const delet = await axios.delete(`${api_base}users/clearcart`,
         {
           headers: {
@@ -107,139 +109,173 @@ const AddtoCart = () => {
           }
         }
       )
-      console.log("Cart Clear Successfully")
+      toast.success("Cart cleared 🧹")
 
     } catch (error) {
       console.log(`Cart Clear Error:- ${error} `)
+      fetchAllCarts()
     }
   }
 
   useEffect(() => {
-    fetchAllCarts()
-  }, [])
-  // ====== Plasing Order Baki hain abhi ------
+    if (token) fetchAllCarts()
+  }, [token])
+  // ====== Order Place ------
+  const placeOrder = async () => {
+    try {
+      const orderRes = await axios.post(`${api_base}users/orderplace`, {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      console.log("Order Placed Successfully")
+      toast.success("Order Placed Successfully 🎉", {
+        position: "top-center",
+        autoClose: 1000,
+        transition: Bounce
+      });
+      await fetchAllCarts()
+      setCartlength(0)
+      navigate("/")
+
+    } catch (error) {
+      console.log(`Error:- ${error}`)
+    }
+  }
 
   return (
     <>
-      <div className=' w-full h-screen flex flex-col justify-center items-center ' >
-        <h1>My Cart</h1>
-        <div className=' w-full h-[90%]  flex justify-around   ' >
-          {/* ==== Left Side */}
-          <div className=' cartitem bg-[#cef9cf] p-2 w-[70%] h-[90%] rounded flex flex-col justify-baseline gap-2 cursor-pointer overflow-scroll  ' >
+      <div className="w-full min-h-screen bg-[#f6f9ff] flex flex-col items-center ">
 
-            {
-              allCarts.length === 0 ? (
-                <div className=' w-full flex flex-col justify-center items-center ' >
-                  <h1 className=' text-center ' >Cart is Empty</h1>
-                  <button
-                    onClick={() => navigate('/')}
-                    className=' bg-[#ff0202] p-0.5 rounded text-white font-semibold cursor-pointer flex justify-center items-center gap-0.5 ' >Go to Add Products <FcBusiness /> </button>
-                </div>
-              ) : (
-                allCarts.map((item, index) => (
-                  <div
-                    key={index}
-                    className=" w-full h-[20%] flex items-center gap-5 bg-white p-2 rounded-2xl shadow-md hover:shadow-lg transition">
+        {/* Title */}
+        <h1 className="text-4xl font-bold text-[#1e3a8a] mb-8">🛒 My Cart</h1>
 
-                    {/* Product Image */}
-                    <div className="w-28 h-full shrink-0">
-                      <img
-                        src={`${api_base}${item.product.image}`}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover rounded-xl"
-                      />
+        <div className="w-[95%] max-w-7xl flex flex-wrap justify-between gap-8">
+
+          {/* ================= LEFT : CART ITEMS ================= */}
+          <div className="w-full lg:w-[68%] h-[75vh] bg-white rounded-3xl shadow-xl p-6 overflow-y-auto scrollbar-hide">
+
+            {allCarts.length === 0 ? (
+              <div className="w-full h-full flex flex-col justify-center items-center text-center gap-4">
+                <h1 className="text-2xl font-semibold text-gray-600">Your cart feels lonely 🥺</h1>
+                <button
+                  onClick={() => navigate("/")}
+                  className="bg-blue-600 cursor-pointer hover:bg-[#011c55] text-white px-6 py-3 rounded-xl font-semibold transition">
+                  Continue Shopping
+                </button>
+              </div>
+            ) : (
+              allCarts.map((item) => (
+                <div
+                  key={item.id}
+                  className="w-full flex items-center gap-6 mb-5 p-4 rounded-2xl border hover:shadow-lg transition bg-[#fbfdff]">
+
+                  {/* Image */}
+                  <img
+                    src={`${item.product.image}`}
+                    alt=""
+                    className="w-28 h-28 object-cover rounded-xl"
+                  />
+
+                  {/* Info */}
+                  <div className="flex flex-col flex-1">
+                    <h2 className="text-lg font-semibold text-gray-800">{item.product.name}</h2>
+
+                    <div className="flex gap-3 mt-2 items-center">
+                      <span className="text-xl font-bold text-blue-600">
+                        ₹{item.product.disc_price}
+                      </span>
+                      <span className="text-gray-400 line-through">
+                        ₹{item.product.price}
+                      </span>
                     </div>
-
-                    {/* Product Details */}
-                    <div className="flex flex-col flex-1">
-                      <h2 className="text-lg font-semibold line-clamp-1 text-gray-800">
-                        {item.product.name}
-                      </h2>
-
-                      {/* Price */}
-                      <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xl font-bold text-green-600">
-                          ₹{item.product.disc_price}
-                        </span>
-
-                        <span className="text-gray-400 line-through">
-                          ₹{item.product.price}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Remove Button */}
-                    <button
-                      // onClick={() => removeItem(product.id)}
-                      className="text-red-500 text-xl flex gap-2 justify-center items-center "
-                    >
-                      <FcMinus
-                        onClick={() => decreaseQuantity(item.product_id)}
-                        className=' hover:bg-[#eae7e7] transition-all ease-in-out hover:p-0.5 rounded-2xl cursor-pointer ' />
-                      <p className=' font-semibold ' >{item.quantity}</p>
-                      <FcPlus
-                        onClick={() => increaseQuantity(item.product_id)}
-                        className=' hover:bg-[#eae7e7] transition-all ease-in-out hover:p-0.5 rounded-2xl cursor-pointer ' />
-                      <FaTrash
-                      onClick={()=> removeCart(item.id)} 
-                      className=' hover:bg-[#eae7e7] transition-all ease-in-out hover:p-0.5 rounded-2xl cursor-pointer ' />
-                    </button>
                   </div>
-                ))
-              )
-            }
 
+                  {/* Quantity */}
+                  <div className="flex items-center gap-3 bg-white shadow px-3 py-2 rounded-xl">
+                    <FcMinus
+                      onClick={() => decreaseQuantity(item.product_id)}
+                      className="cursor-pointer text-xl hover:scale-110"
+                    />
+                    <span className="font-bold">{item.quantity}</span>
+                    <FcPlus
+                      onClick={() => increaseQuantity(item.product_id)}
+                      className="cursor-pointer text-xl hover:scale-110"
+                    />
+                  </div>
+
+                  {/* Delete */}
+                  <FaTrash
+                    onClick={() => removeCart(item.id)}
+                    className="text-red-500 cursor-pointer hover:scale-110"
+                  />
+                </div>
+              ))
+            )}
 
           </div>
-          {/* ==== Right Side */}
-          <div className=' w-[25%] h-[90%] bg-[#165d00] rounded  p-2 ' >
-            <div className=' flex justify-between items-center ' >
-              <h2 className="text-2xl text-white font-bold ">Order Summary</h2>
-              <button
-                onClick={clearCart}
-                className="text-[1rem] text-white font-bold cursor-pointer hover:bg-[#bab4b4] hover:text-black transition-all ease-in-out p-0.5 rounded ">Clear Cart</button>
-            </div>
 
-            {/* Price Details */}
-            <div className="space-y-4 text-white">
+          {/* ================= RIGHT : SUMMARY ================= */}
+          <div className="w-full lg:w-[28%] h-[75vh] bg-linear-to-br from-[#1e3a8a] to-[#0f172a] text-white rounded-3xl shadow-xl p-6 flex flex-col justify-between">
 
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>₹ subtotal</span>
+            <div>
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Order Summary</h2>
+                <button
+                  onClick={clearCart}
+                  className="text-sm cursor-pointer hover:text-red-300 transition">
+                  Clear Cart
+                </button>
               </div>
 
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span className="text-green-600">Free</span>
+              <div className="space-y-4 mt-8">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>₹ {sum}</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span className="text-green-300">Free</span>
+                </div>
+
+                <div className="flex justify-between">
+                  <span>Discount</span>
+                  <span className="text-green-300">₹ 0</span>
+                </div>
+
+                <hr className="border-white/30" />
+
+                <div className="flex justify-between text-2xl font-bold">
+                  <span>Total</span>
+                  <span>₹ {sum}</span>
+                </div>
+
+                <p className="text-sm text-gray-300">
+                  Taxes included • Delivery in 3–5 days
+                </p>
               </div>
-
-              <div className="flex justify-between">
-                <span>Discount</span>
-                <span className="text-green-600">- ₹ 0.00</span>
-              </div>
-
-              <hr />
-
-              {/* Total */}
-              <div className="flex justify-between text-xl font-bold">
-                <span>Total Amount</span>
-                <span>₹{sum} </span>
-              </div>
-
-              <p className="text-sm text-gray-500">
-                Taxes included. Delivery within 3–5 days.
-              </p>
             </div>
 
             {/* Buttons */}
-            <button className="w-full mt-6 bg-[#1aff00] text-black font-semibold cursor-pointer py-3 rounded-xl hover:bg-[#b6b9acc1] transition">
-              Place Order
-            </button>
+            <div>
+              <button
+                onClick={placeOrder}
+                className="w-full cursor-pointer bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-3 rounded-xl transition">
+                Place Order
+              </button>
 
-            <button className="w-full mt-3 bg-[#b4b8ab] cursor-pointer py-3 rounded-xl hover:bg-gray-100 transition">
-              Continue Shopping
-            </button>
+              <button
+                onClick={() => navigate("/")}
+                className="w-full mt-3 cursor-pointer bg-white/20 hover:bg-white/30 py-3 rounded-xl transition">
+                Continue Shopping
+              </button>
+            </div>
+
           </div>
+
         </div>
       </div>
     </>

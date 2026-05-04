@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import boy from '../images/boy.png'
 import boy2 from '../images/boy2.png'
@@ -20,12 +20,13 @@ import { toast, Bounce } from 'react-toastify'
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Catagories from '../components/Catagories'
+import Profile from '../components/Profile'
 
 const Hero = () => {
-    const { token, cartlength, setCartlength } = useContext(AuthContext)
+    const { token, cartlength, setCartlength, showProfileMenu, setShowProfileMenu } = useContext(AuthContext)
     const [products, setProducts] = useState([])
     const [newArrivalProducts, setNewArrivalProducts] = useState([])
-    const [loading,setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
 
 
     const images = [boy, boy2, boy3, boy4, boy5]
@@ -55,6 +56,7 @@ const Hero = () => {
                 }
             )
             console.log("Products:- ", productRes.data)
+            setLoading(false)
 
 
             setProducts(productRes.data)
@@ -64,9 +66,7 @@ const Hero = () => {
 
         }
     }
-    useEffect(() => {
-        fetchProducts()
-    }, [])
+
 
     // ------ Fetch New Arrival Products -----------
     const fetchNewArrivalProducts = async () => {
@@ -85,9 +85,8 @@ const Hero = () => {
             console.log(`Error:- ${error}`)
         }
     }
-    useEffect(() => {
-        fetchNewArrivalProducts()
-    }, [])
+
+
     // ======= Cart Length ======
     const cartSize = async () => {
         try {
@@ -104,9 +103,7 @@ const Hero = () => {
             console.log(`Error:- ${error}`)
         }
     }
-    useEffect(() => {
-        cartSize()
-    }, [])
+
     // ================ Add to Cart ===========
     const addCart = async (id) => {
         try {
@@ -135,179 +132,165 @@ const Hero = () => {
             });
         }
     }
-    
+
+    useEffect(() => {
+        if (!token) return
+
+        const loadData = async () => {
+            await Promise.all([
+                fetchProducts(),
+                fetchNewArrivalProducts(),
+                cartSize()
+            ])
+        }
+
+        loadData()
+    }, [token])
 
     return (
         <>
-            <div className="p-4 flex flex-col gap-2 bg-[#F2F2F2] ">
-                {/* === Catagory === */}
-                {/* <Catagories /> */}
-                {/* ---- Main ---- */}
-                <div className='bg-[#EAEAEA]  h-[70vh] text-white flex justify-around items-center rounded-2xl ' >
-                    <div className=' w-[50%] h-full flex flex-col justify-center items-center p-2 ' >
-                        <h1 className=' text-5xl text-black font-bold uppercase font-sans ' ><span className=' text-[#0724ff] ' >Shop Smarter</span>. Live Better with Cartify.</h1>
-                        <p className='text-black ' >Your one-stop eCommerce destination htmlFor electronics, fashion, gadgets, and daily essentials — all in one place.</p>
-                        <div className=' w-full  flex justify-center items-center p-2 gap-2  ' >
-                            <button className=' border border-[#0f0bff] text-black rounded p-1.5 cursor-pointer ' >🛍️ Start Shopping</button>
-                            <button className='border border-[#091aff] text-black rounded p-1.5 cursor-pointer' >🔍 Explore Products</button>
+            <div className="w-full bg-slate-100 p-6 flex flex-col gap-14 ">
+                {/* ======== Show Profile Menu Bar ========== */}
+                {/* {
+                    showProfileMenu ? (
+                        <div className=' w-full border bg-red-500 fixed top-0 ' >
+                            <p>Profile Menu</p>
+                            <Profile />
                         </div>
-                        <p className=' font-mono text-black '>Fast delivery • Best prices • Trusted quality</p>
-                    </div>
-                    <div className=' w-[50%] h-full flex justify-center items-center ' >
-                        <div className='  w-full h-[80%] bg-[#ffffff] rounded-l-full gap-2  p-5   flex justify-center items-center overflow-hidden relative ' >
-                            {
-                                images.map((img, index) => (
-                                    <img
-                                        key={index}
-                                        src={img}
-                                        alt=""
-                                        onMouseEnter={() => setActive(index)}
-                                        onMouseLeave={() => setActive(null)}
-                                        className={`   p-1 rounded-4xl cursor-pointer transition-all duration-500 ease-in-out object-cover
-                                            ${active === null && "w-[20%] h-[60%] "}   
-                                            ${active !== null && active !== index && "w-[10%] h-[40%] opacity-40 blur-sm"}
-                                            ${active === index && "absolute w-[60%] h-[90%] z-20 shadow-2xl"}`}
 
-                                    />
-                                ))
-                            }
+                    ) : null
+                } */}
+                <Profile />
+                {/* HERO */}
+                <section className="w-full h-[75vh] bg-white rounded-3xl shadow-xl flex justify-between items-center px-10">
+
+                    {/* Left Text */}
+                    <div className="w-1/2 flex flex-col gap-6">
+                        <h1 className="text-5xl font-extrabold leading-tight">
+                            <span className="text-[#1028ff]">Shop Smarter</span>
+                            <br /> Live Better with Cartify
+                        </h1>
+
+                        <p className="text-gray-600 text-lg max-w-xl">
+                            Your one-stop destination for electronics, fashion, gadgets and daily essentials.
+                        </p>
+
+                        {/* <div className="flex gap-4">
+                            <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:scale-105 transition">
+                                🛍️ Start Shopping
+                            </button>
+                            <button className="px-6 py-3 border border-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition">
+                                🔍 Explore Products
+                            </button>
+                        </div> */}
+
+                        <p className="text-sm text-gray-400">
+                            Fast delivery • Best prices • Trusted quality
+                        </p>
+                    </div>
+
+                    {/* Right Image Hover Gallery */}
+                    <div className="w-1/2 flex justify-center">
+                        <div className="w-full h-[85%] bg-slate-50 rounded-l-full flex justify-center items-center gap-4 overflow-hidden relative p-5">
+                            {images.map((img, index) => (
+                                <img
+                                    key={index}
+                                    src={img}
+                                    onMouseEnter={() => setActive(index)}
+                                    onMouseLeave={() => setActive(null)}
+                                    className={`
+              rounded-3xl object-cover transition-all duration-500 cursor-pointer
+              ${active === null && "w-[22%] h-[65%]"}
+              ${active !== null && active !== index && "w-[12%] h-[45%] opacity-40 blur-sm"}
+              ${active === index && "absolute w-[65%] h-[95%] z-20 shadow-2xl"}
+            `}
+                                />
+                            ))}
                         </div>
                     </div>
-                </div>
-                {/* ======= Mega Sales Offer ====== */}
 
-                <div className=' w-full p-3 flex justify-center items-center rounded-2xl  ' >
+                </section>
+
+                {/* MEGA SALE CAROUSEL */}
+                <section className="flex justify-center">
                     <Carousel
-                        className=' w-[70%] rounded-2xl bg-red-500 '
-                        autoPlay
-                        infiniteLoop
-                        showThumbs={false}
-                        showStatus={false}
-                        interval={3000}
+                        className="w-[75%] rounded-3xl overflow-hidden shadow-xl"
+                        autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={3000}
                     >
-                        <div>
-                            <img src={sale1} className="h-100 object-cover rounded-2xl " />
-                        </div>
-
-                        <div>
-                            <img src={sale2} className="h-100 object-cover rounded-2xl" />
-                        </div>
-
-                        <div>
-                            <img src={sale3} className="h-100 object-cover rounded-2xl" />
-                        </div>
-                    </Carousel>
-                </div>
-                {/* ------------ Catagories ------------ */}
-                <h1 className=' text-2xl font-bold text-center ' >Shop By Catagories</h1>
-
-                <div className='bg-[#fbf3b6] w-full h-[30vh] gap-3 p-3 flex  justify-center items-center rounded-2xl  ' >
-                    {
-                        catg.map((item, index) => (
-                            <div key={index}
-                                className='w-[20%] gap-2 bg-[#ffffff] p-2 rounded-2xl h-[60%] cursor-pointer flex justify-center items-center hover:scale-105 transition-all duration-100 ease-in-out hover:shadow-2xl hover:shadow-[#077979] ' >
-                                <img src={item.img}
-                                    className=' h-full '
-                                    alt={item.name} />
-                                <p className='font-semibold ' >{item.name}</p>
+                        {[sale1, sale2, sale3].map((img, i) => (
+                            <div key={i}>
+                                <img src={img} className="h-[420px] w-full object-cover" />
                             </div>
-                        ))
-                    }
-                </div>
-                {/* ----------- New Arrivals Section ----------- */}
-                <h1 className=' text-2xl font-bold text-center ' >New Arrivals</h1>
+                        ))}
+                    </Carousel>
+                </section>
 
-                <div className=' w-full h-auto gap-8 p-3 flex flex-wrap justify-center items-center rounded-2xl  ' >
-                    {
-                        newArrivalProducts.length === 0 ?
-                            <h1>No Products</h1>
-                            :
-                            newArrivalProducts.map((item, index) => (
-                                <div key={index}
-                                    className='w-[18%] gap-2 bg-[#ffffff] rounded-2xl p-2 h-[45%] cursor-pointer relative flex flex-col justify-center items-center hover:scale-105 transition-all duration-100 ease-in-out hover:shadow-sm hover:shadow-[#6f7373] ' >
-                                    <div className=' bg-[#ffef0a] font-semibold absolute top-0 left-0 -skew-6 rounded p-0.5 ' >Trending</div>
-                                    <img src={item.image}
-                                        className=' w-full h-[50%] rounded-2xl '
-                                        alt="" />
-                                    <p>{item.name}</p>
-                                    <p>Rs. {item.price}</p>
-                                </div>
-                            ))
-                        // newArrivalProducts.map((item, index) => (
-                        //     <div key={index}
-                        //         className='w-[18%] gap-2 bg-[#ffffff] rounded-2xl p-2 h-[45%] cursor-pointer relative flex flex-col justify-center items-center hover:scale-105 transition-all duration-100 ease-in-out hover:shadow-sm hover:shadow-[#6f7373] ' >
-                        //         <div className=' bg-[#ffef0a] font-semibold absolute top-0 left-0 -skew-6 rounded p-0.5 ' >Trending</div>
-                        //         <img src={item.image}
-                        //             className=' w-full h-[50%] rounded-2xl '
-                        //             alt="" />
-                        //         <p>{item.name}</p>
-                        //         <p>Rs. {item.price}</p>
-                        //     </div>
-                        // ))
-                    }
-                </div>
-                {/* ======= All Products ====== */}
-                <div className=' flex flex-wrap w-full justify-center items-center gap-2 ' >
-                    {
-                        loading ?(
-                            products.map((item, index) => (
-                            <div key={index} className="w-64 h-100 p-2 bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 relative group">
+                {/* CATEGORIES */}
+                <section className="flex flex-col items-center gap-8">
+                    <h2 className="text-3xl font-bold">Shop by Categories</h2>
 
-                                {/* <!-- Discount Badge --> */}
-                                <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full">
-                                    -30%
+                    <div className="flex flex-wrap justify-center gap-8 bg-yellow-100 p-8 rounded-3xl shadow-inner w-full">
+                        {catg.map(item => (
+                            <div key={item.name}
+                                className="w-52 bg-white rounded-2xl p-4 flex flex-col items-center gap-3 shadow hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+                                <img src={item.img} className="h-24" />
+                                <p className="font-semibold">{item.name}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* NEW ARRIVALS */}
+                <section className="flex flex-col items-center gap-8">
+                    <h2 className="text-3xl font-bold">New Arrivals</h2>
+
+                    <div className="flex flex-wrap justify-center gap-8">
+                        {newArrivalProducts.map(item => (
+                            <div key={item.id}
+                                className="w-60 bg-white rounded-3xl shadow hover:shadow-2xl transition overflow-hidden relative">
+                                <span className="absolute top-3 left-3  bg-yellow-400 px-3 py-1 rounded-full text-xs font-bold">
+                                    Trending
                                 </span>
-
-                                {/* <!-- Product Image --> */}
-                                <div className="overflow-hidden rounded-t-2xl">
-                                    <img
-                                        // src={sale1}
-                                        src={`${BASE_URL}/${item.image}`}
-                                        alt='loading....'
-                                        className="w-full h-56 object-cover group-hover:scale-110 transition duration-300"
-                                    />
+                                <img src={item.image} className="h-44 w-full object-cover" />
+                                <div className="p-4 text-center">
+                                    <p className="font-semibold">{item.name}</p>
+                                    <p className="text-green-600 font-bold">₹ {item.price}</p>
                                 </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
-                                {/* <!-- Product Info --> */}
-                                <div className="p-4">
+                {/* ALL PRODUCTS */}
+                <section className="flex flex-col items-center gap-10">
+                    <h2 className="text-3xl font-bold">All Products</h2>
 
-                                    {/* <!-- Title --> */}
-                                    <h3 className="text-sm font-semibold line-clamp-1 ">
-                                        {item.name}
-                                    </h3>
+                    <div className="flex flex-wrap justify-center gap-10">
+                        {products.map(item => (
+                            <div key={item.id}
+                                className="w-64 bg-white rounded-3xl shadow-md hover:shadow-2xl transition overflow-hidden">
 
-                                    {/* <!-- Rating --> */}
-                                    <div className="flex items-center text-yellow-500 text-sm mt-1">
-                                        ⭐⭐⭐⭐☆
-                                        <span className="text-gray-500 ml-2">(245)</span>
+                                <img src={item.image} className="h-56 w-full object-cover" />
+
+                                <div className="p-5">
+                                    <h3 className="font-semibold line-clamp-1">{item.name}</h3>
+
+                                    <div className="flex gap-2 mt-2">
+                                        <span className="text-xl font-bold text-green-600">₹{item.disc_price}</span>
+                                        <span className="line-through text-gray-400">₹{item.price}</span>
                                     </div>
 
-                                    {/* <!-- Price --> */}
-                                    <div className="flex items-center gap-2 mt-2">
-                                        <span className="text-lg font-bold">₹ {item.disc_price}</span>
-                                        <span className="text-gray-400 line-through text-sm">₹ {item.price}</span>
-                                        <button className="text-xl cursor-pointer absolute right-3 transition">
-                                            <FaRegHeart />
-                                        </button>
-                                        <p>{item.id}</p>
-                                    </div>
-
-                                    {/* <!-- Add to Cart --> */}
                                     <button
                                         onClick={() => addCart(item.id)}
-                                        className="mt-3 w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-semibold transition">
+                                        className="mt-4 w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl font-semibold transition">
                                         Add to Cart
                                     </button>
-
                                 </div>
-                            </div>
-                        ))
-                        ):(
-                            <p>Loading.......</p>
-                        )
-                    }
 
-                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
             </div>
         </>

@@ -7,105 +7,133 @@ import { AuthContext } from '../context/AuthContext';
 
 const Navbar = () => {
     const navigate = useNavigate()
-    const { isLoggedIn, logout, cartlength } = useContext(AuthContext)
-    
+    const { isLoggedIn, logout, cartlength, showProfileMenu, setShowProfileMenu } = useContext(AuthContext)
+
 
     return (
-        <div className='w-full h-[10vh] bg-white shadow-2xl flex justify-between items-center p-2'>
+        <div className="w-full h-[10vh] sticky top-0 z-50 backdrop-blur-lg bg-white/80 shadow-lg flex justify-between items-center px-6">
 
-            {/* Logo */}
-            <div className='h-full w-[20%] flex justify-center items-center'>
-                <h1 className='text-2xl font-bold uppercase'>CartiFy</h1>
+            {/* LOGO */}
+            <div className="flex items-center w-[10%]">
+                <h1 className="text-3xl font-extrabold text-blue-700 tracking-wide cursor-pointer">
+                    CartiFy
+                </h1>
             </div>
-            <input type="search" name="search" placeholder='Search products....'
-                className=' border-2 border-[#20194a] p-1.5 rounded w-[30%] ' />
 
-            {/* Menu */}
-            <ul className='w-[40%] h-full flex justify-center text-[0.9rem] items-center gap-5'>
+            {/* SEARCH */}
+            <div className="w-[28%] relative">
+                <input
+                    type="search"
+                    placeholder="Search products..."
+                    className="w-full pl-4 pr-4 py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-[#f6f9ff]"
+                />
+            </div>
+
+            {/* MENU */}
+            <ul className="w-[38%] flex justify-center items-center gap-7 font-semibold text-gray-700">
+
                 <li>
-                    <NavLink className={({ isActive }) => isActive ? "text-[#180cff] font-semibold" : "font-semibold"} to="/">
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+                                : "hover:text-blue-600 transition"
+                        }>
                         Home
                     </NavLink>
                 </li>
 
                 <li>
-                    <NavLink className={({ isActive }) => isActive ? "text-[#180cff] font-semibold" : "font-semibold"} to="/about">
+                    <NavLink
+                        to="/about"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+                                : "hover:text-blue-600 transition"
+                        }>
                         About
                     </NavLink>
                 </li>
 
                 <li>
-                    <select name="catagory" className=' outline-0 font-semibold ' >
-                        <option value="">All Catagories</option>
-                        <option value="">Mens wear</option>
-                        <option value="">Womens wear</option>
-                        <option value="">T-shirt</option>
-                        <option value="">Cosmetic</option>
-                        <option value="">Electronics</option>
-                        <option value="">Watches</option>
-                        <option value="">Shoes & Footwear</option>
+                    <select className="bg-transparent outline-none cursor-pointer hover:text-blue-600">
+                        <option>All Categories</option>
+                        <option>Mens Wear</option>
+                        <option>Womens Wear</option>
+                        <option>T-shirt</option>
+                        <option>Cosmetic</option>
+                        <option>Electronics</option>
+                        <option>Watches</option>
+                        <option>Shoes</option>
                     </select>
                 </li>
+
                 <li>
-                    <NavLink className={({ isActive }) => isActive ? "text-[#180cff] font-semibold" : "font-semibold"} to="/addproduct">
+                    <NavLink
+                        to="/addproduct"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+                                : "hover:text-blue-600 transition"
+                        }>
                         Add Product
                     </NavLink>
                 </li>
 
             </ul>
-            <div className=' w-[10%] flex justify-center items-center gap-3  ' >
-                <div className="relative">
-                    <NavLink to="wishlist">
-                        <FaRegHeart className=' text-red-500 text-[0.9rem] ' />
-                    </NavLink>
 
-                    {/* Badge */}
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[0.5rem] px-1.5 rounded-full">
+            {/* ICONS */}
+            <div className="flex items-center gap-6">
+
+                {/* Wishlist */}
+                <div className="relative cursor-pointer">
+                    <NavLink to="wishlist">
+                        <FaRegHeart className="text-red-500 text-xl hover:scale-110 transition" />
+                    </NavLink>
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] px-1.5 rounded-full">
                         0
                     </span>
                 </div>
-                <div className="relative">
-                    <NavLink to="cart">
-                        <FaShoppingCart className="text-blue-900 text-[0.9rem] " />
-                    </NavLink>
 
-                    {/* Badge */}
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[0.5rem] px-1.5 rounded-full">
+                {/* Cart */}
+                <div className="relative cursor-pointer">
+                    <NavLink to="cart">
+                        <FaShoppingCart className="text-blue-700 text-xl hover:scale-110 transition" />
+                    </NavLink>
+                    <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-[10px] px-1.5 rounded-full">
                         {cartlength}
                     </span>
                 </div>
 
-
             </div>
 
-            {
-                isLoggedIn ? (
-                    //  ---- After Login ----- 
-                    <>
-                        <div className='flex justify-center items-center gap-3 w-[20%]'>
-                            <button
-                                onClick={logout}
-                                className='px-4 py-1 bg-[#377DF0] font-semibold text-white rounded-md cursor-pointer'>Logout</button>
-                            <FaUserCircle className=' text-3xl cursor-pointer text-[#0b0348] ' />
-                        </div>
-                    </>
-                ) : (
-                    // {/* Buttons */}
-                    <>
-                        <div className='flex gap-3 w-[20%]'>
-                            <button
-                                onClick={() => navigate("signup")}
-                                className='px-4 py-1 border rounded-md cursor-pointer'>Sign up</button>
-                            <button
-                                onClick={() => navigate("login")}
-                                className='px-4 py-1 bg-black text-white rounded-md cursor-pointer'>Login</button>
-                        </div>
-                    </>
-                )
-            }
-
-
-
+            {/* AUTH */}
+            {isLoggedIn ? (
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={logout}
+                        className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition">
+                        Logout
+                    </button>
+                    <FaUserCircle 
+                    onClick={()=>setShowProfileMenu(true)}
+                    className="text-3xl text-blue-900 cursor-pointer" />
+                </div>
+            ) : (
+                <div className="flex gap-3">
+                    <button
+                        onClick={() => navigate("signup")}
+                        className="px-4 py-1.5 border border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition">
+                        Sign up
+                    </button>
+                    <button
+                        onClick={() => navigate("login")}
+                        className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition">
+                        Login
+                    </button>
+                </div>
+            )}
 
         </div>
     )

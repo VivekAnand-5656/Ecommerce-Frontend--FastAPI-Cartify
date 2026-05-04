@@ -54,7 +54,7 @@ const Login = () => {
                 <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
 
                     <h1 className="text-3xl font-bold text-center mb-6">
-                        Welcome to <span className="text-green-500">CartiFy</span>
+                        Welcome to <span className="text-[#1028ff]">CartiFy</span>
                     </h1>
 
                     <form
@@ -71,7 +71,7 @@ const Login = () => {
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
-                                className="px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-green-400"
+                                className="px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-[#1028ff]"
                             />
                         </div>
 
@@ -84,19 +84,19 @@ const Login = () => {
                                 value={formData.password}
                                 onChange={handleChange}
                                 required
-                                className="px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-green-400"
+                                className="px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-[#1028ff]"
                             />
                         </div>
 
                         <button
                             type="submit"
-                            className="mt-4 bg-green-500 text-white py-2 rounded-lg font-semibold hover:bg-green-600 transition duration-300"
+                            className="mt-4 bg-[#1028ff] text-white py-2 rounded-lg font-semibold hover:bg-[#020a52] cursor-pointer transition duration-300"
                         >
                             Login
                         </button>
 
                         <p className="text-center text-sm text-gray-500">
-                            Don't have an account? <span className="text-green-500 cursor-pointer" onClick={() => navigate("/signup")} >Sign up</span>
+                            Don't have an account? <span className="text-[#1028ff] cursor-pointer" onClick={() => navigate("/signup")} >Sign up</span>
                         </p>
 
                     </form>

@@ -10,6 +10,7 @@ import Wishlist from './Pages/Wishlist'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import AddProduct from './AdminPages/AddProduct'
+import Orders from './Pages/Orders'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
               <Route path='wishlist' element={<Wishlist />} />
               <Route path='cart' element={<AddtoCart />} />
               <Route path='addproduct' element={<AddProduct/>} />
+              <Route path='orders' element={<Orders/>} />
             </Route>
           </Routes>
         </BrowserRouter>
