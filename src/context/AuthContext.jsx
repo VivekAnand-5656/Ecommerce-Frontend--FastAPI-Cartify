@@ -6,7 +6,9 @@ const AuthProvider = ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"));
     const [cartlength,setCartlength] = useState(0)
     const [showProfileMenu,setShowProfileMenu] = useState(false)
-
+    const [catagories,setCatagories] = useState("/")
+    const [allProducts,setAllProducts] = useState([])
+    const [searchQuery,setSearchQuery] = useState("")
     const login = (jwt)=>{
         setToken(jwt)
         localStorage.setItem("token", jwt)
@@ -21,7 +23,7 @@ const AuthProvider = ({children}) => {
   return ( 
     <AuthContext.Provider value={
         {
-            token,isLoggedIn,login,logout,cartlength,setCartlength,showProfileMenu,setShowProfileMenu
+            token,isLoggedIn,login,logout,cartlength,setCartlength,showProfileMenu,setShowProfileMenu,catagories,setCatagories,allProducts,setAllProducts,searchQuery,setSearchQuery
         }
     } >
         {children}

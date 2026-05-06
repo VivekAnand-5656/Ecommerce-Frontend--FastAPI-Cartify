@@ -4,15 +4,29 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { AuthContext } from '../context/AuthContext';
+import Sidebar from '../catagories/Sidebar';
 
 const Navbar = () => {
     const navigate = useNavigate()
-    const { isLoggedIn, logout, cartlength, showProfileMenu, setShowProfileMenu } = useContext(AuthContext)
+    const { isLoggedIn, logout, cartlength, showProfileMenu, setShowProfileMenu, catagories, setCatagories, allProducts, searchQuery, setSearchQuery } = useContext(AuthContext)
+    // const [searchData,setSearchData] = {}
+    // ====== Search Baki hai =======
 
-
+    const handleSearch = (e) => {
+        if (e.key === "Enter") {
+            const value = e.target.value.trim()
+            if (!value) return
+            setSearchQuery(value)
+            navigate("/search")
+        } else{
+            setSearchQuery("")
+            navigate("/")
+        }
+    }
     return (
         <div className="w-full h-[10vh] sticky top-0 z-50 backdrop-blur-lg bg-white/80 shadow-lg flex justify-between items-center px-6">
-
+            {/* ===== Sidebar Catagories ======= */}
+            <Sidebar/>
             {/* LOGO */}
             <div className="flex items-center w-[10%]">
                 <h1 className="text-3xl font-extrabold text-blue-700 tracking-wide cursor-pointer">
@@ -24,6 +38,8 @@ const Navbar = () => {
             <div className="w-[28%] relative">
                 <input
                     type="search"
+                    onKeyDown={handleSearch}
+                    // onChange={(e)=>}
                     placeholder="Search products..."
                     className="w-full pl-4 pr-4 py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-[#f6f9ff]"
                 />
@@ -43,31 +59,7 @@ const Navbar = () => {
                         Home
                     </NavLink>
                 </li>
-
-                <li>
-                    <NavLink
-                        to="/about"
-                        className={({ isActive }) =>
-                            isActive
-                                ? "text-blue-600 border-b-2 border-blue-600 pb-1"
-                                : "hover:text-blue-600 transition"
-                        }>
-                        About
-                    </NavLink>
-                </li>
-
-                <li>
-                    <select className="bg-transparent outline-none cursor-pointer hover:text-blue-600">
-                        <option>All Categories</option>
-                        <option>Mens Wear</option>
-                        <option>Womens Wear</option>
-                        <option>T-shirt</option>
-                        <option>Cosmetic</option>
-                        <option>Electronics</option>
-                        <option>Watches</option>
-                        <option>Shoes</option>
-                    </select>
-                </li>
+ 
 
                 <li>
                     <NavLink
@@ -116,9 +108,9 @@ const Navbar = () => {
                         className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition">
                         Logout
                     </button>
-                    <FaUserCircle 
-                    onClick={()=>setShowProfileMenu(true)}
-                    className="text-3xl text-blue-900 cursor-pointer" />
+                    <FaUserCircle
+                        onClick={() => setShowProfileMenu(true)}
+                        className="text-3xl text-blue-900 cursor-pointer" />
                 </div>
             ) : (
                 <div className="flex gap-3">

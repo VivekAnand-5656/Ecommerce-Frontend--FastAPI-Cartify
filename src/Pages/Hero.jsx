@@ -13,6 +13,7 @@ import shoes from '../images/sh.png'
 import sale1 from '../images/sale1.png'
 import sale2 from '../images/sale2.png'
 import sale3 from '../images/sale3.png'
+import cosmetic from '../images/cosm.png'
 import { FaCircleArrowRight } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import { toast, Bounce } from 'react-toastify'
@@ -21,12 +22,14 @@ import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Catagories from '../components/Catagories'
 import Profile from '../components/Profile'
+import { useNavigate } from 'react-router-dom'
 
 const Hero = () => {
     const { token, cartlength, setCartlength, showProfileMenu, setShowProfileMenu } = useContext(AuthContext)
     const [products, setProducts] = useState([])
     const [newArrivalProducts, setNewArrivalProducts] = useState([])
     const [loading, setLoading] = useState(true)
+    const navigate = useNavigate()
 
 
     const images = [boy, boy2, boy3, boy4, boy5]
@@ -35,10 +38,11 @@ const Hero = () => {
     const megasales = [sale1, sale2, sale3]
 
     const catg = [
-        { img: women, name: "Women Fashion" },
-        { img: men, name: "Men Fashion" },
-        { img: elctronics, name: "Electronics" },
-        { img: shoes, name: "Shoes" }
+        { img: women, name: "Women Fashion", navi: "womens" },
+        { img: men, name: "Men Fashion", navi: "mens" },
+        { img: elctronics, name: "Electronics", navi: "electronics" },
+        { img: shoes, name: "Shoes", navi: "/" },
+        { img: cosmetic, name: "Cosmetic", navi: "cosmetic" }
     ]
 
     // ---- All Products Fetch ------
@@ -150,16 +154,7 @@ const Hero = () => {
     return (
         <>
             <div className="w-full bg-slate-100 p-6 flex flex-col gap-14 ">
-                {/* ======== Show Profile Menu Bar ========== */}
-                {/* {
-                    showProfileMenu ? (
-                        <div className=' w-full border bg-red-500 fixed top-0 ' >
-                            <p>Profile Menu</p>
-                            <Profile />
-                        </div>
 
-                    ) : null
-                } */}
                 <Profile />
                 {/* HERO */}
                 <section className="w-full h-[75vh] bg-white rounded-3xl shadow-xl flex justify-between items-center px-10">
@@ -174,15 +169,6 @@ const Hero = () => {
                         <p className="text-gray-600 text-lg max-w-xl">
                             Your one-stop destination for electronics, fashion, gadgets and daily essentials.
                         </p>
-
-                        {/* <div className="flex gap-4">
-                            <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:scale-105 transition">
-                                🛍️ Start Shopping
-                            </button>
-                            <button className="px-6 py-3 border border-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition">
-                                🔍 Explore Products
-                            </button>
-                        </div> */}
 
                         <p className="text-sm text-gray-400">
                             Fast delivery • Best prices • Trusted quality
@@ -231,7 +217,9 @@ const Hero = () => {
 
                     <div className="flex flex-wrap justify-center gap-8 bg-yellow-100 p-8 rounded-3xl shadow-inner w-full">
                         {catg.map(item => (
-                            <div key={item.name}
+                            <div
+                                onClick={() => navigate(item.navi)}
+                                key={item.name}
                                 className="w-52 bg-white rounded-2xl p-4 flex flex-col items-center gap-3 shadow hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
                                 <img src={item.img} className="h-24" />
                                 <p className="font-semibold">{item.name}</p>
@@ -242,7 +230,7 @@ const Hero = () => {
 
                 {/* NEW ARRIVALS */}
                 <section className="flex flex-col items-center gap-8">
-                    <h2 className="text-3xl font-bold">New Arrivals</h2>
+                    {/* <h2 className="text-3xl font-bold">New Arrivals</h2> */}
 
                     <div className="flex flex-wrap justify-center gap-8">
                         {newArrivalProducts.map(item => (
@@ -273,7 +261,8 @@ const Hero = () => {
                                 <img src={item.image} className="h-56 w-full object-cover" />
 
                                 <div className="p-5">
-                                    <h3 className="font-semibold line-clamp-1">{item.name}</h3>
+                                    <h3 className="font-semibold line-clamp-1 ">{item.name}</h3>
+                                    <p className=' line-clamp-1 ' >{item.description}</p>
 
                                     <div className="flex gap-2 mt-2">
                                         <span className="text-xl font-bold text-green-600">₹{item.disc_price}</span>

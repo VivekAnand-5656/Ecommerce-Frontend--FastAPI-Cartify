@@ -15,10 +15,11 @@ const Signup = () => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
   }
-  const api_base = "https://e-commerce-project-3365.onrender.com/"
-  const signupForm = async () => {
+  const api_base = "https://e-commerce-project-3365.onrender.com"
+  const signupForm = async (e) => {
+    e.preventDefault()
     try {
-      const signRes = await axios.post(`${api_base}users/create_user`, formData)
+      const signRes = await axios.post(`${api_base}/users/create_user`, formData)
       console.log("User Created Success");
       console.log("User:- ", signRes.data);
       toast.success('Signup Successfull', {
@@ -38,9 +39,11 @@ const Signup = () => {
         email: "",
         password: ""
       })
+      navigate("/login")
 
     } catch (error) {
       console.log(`Signup Error:- ${error}`)
+      toast.error("Signup Failed!")
     }
   }
 

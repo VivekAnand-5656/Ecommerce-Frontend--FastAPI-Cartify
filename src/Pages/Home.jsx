@@ -20,9 +20,10 @@ import mobile from '../images/mobile.png'
 import combo from '../images/combo.png'
 import chasma from '../images/chasma.png'
 import watch from '../images/watch.png'
+import Mens from '../catagories/Mens'
 
 const Home = () => {
-    const { isLoggedIn, token } = useContext(AuthContext)
+    const { isLoggedIn, token, catagories,setAllProducts } = useContext(AuthContext)
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -38,6 +39,7 @@ const Home = () => {
             console.log("APi Succed");
 
             setProducts(productRes.data)
+            setAllProducts(productRes.data)
         } catch (error) {
             console.log(`Error:- ${error}`)
             setLoading(false)
@@ -83,14 +85,16 @@ const Home = () => {
             });
         }
     }
+     
     return (
         <>
             {
-                isLoggedIn ? (
+                isLoggedIn && catagories === "/" ? (
                     <>
                         <Hero />
-                        {/* <h1>Login Successful</h1> */}
                     </>
+                ) :  catagories === "mens" ? (
+                    <Mens/>
                 ) : (
                     <>
                         <div className="w-full flex flex-col gap-10 p-2 bg-slate-100">
@@ -142,22 +146,7 @@ const Home = () => {
                                 </div>
                             </section>
 
-                            {/* WHY CHOOSE */}
-                            <section className="bg-white rounded-3xl shadow-lg p-10 flex flex-col items-center">
-                                <h2 className="text-3xl font-bold mb-2 text-slate-800">Why Choose Cartify?</h2>
-                                <p className="text-slate-500 mb-10 text-center max-w-xl">
-                                    A modern shopping platform built for speed, simplicity and trust.
-                                </p>
-
-                                <div className="flex flex-wrap justify-center gap-8">
-                                    {[price, wide, smooth, secure].map((img, i) => (
-                                        <div key={i} className="w-60 bg-blue-50 p-6 rounded-2xl shadow hover:shadow-xl hover:-translate-y-1 transition text-center">
-                                            <img src={img} className="h-24 mx-auto mb-4" />
-                                            <h3 className="font-semibold text-lg text-blue-700">Premium Experience</h3>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
+                            
 
                             {/* CATEGORIES */}
                             <section className="bg-white rounded-3xl shadow-lg p-10 flex flex-col items-center">
@@ -183,7 +172,7 @@ const Home = () => {
                                             <img src={item.image} className="h-56 w-full object-cover" />
 
                                             <div className="p-5">
-                                                <h3 className="font-semibold">{item.name}</h3>
+                                                <h3 className="font-semibold line-clamp-1 ">{item.name}</h3>
 
                                                 <div className="flex gap-2 mt-2">
                                                     <span className="text-xl font-bold text-blue-600">₹{item.disc_price}</span>
@@ -221,6 +210,22 @@ const Home = () => {
                                 <button className="bg-white text-blue-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transition">
                                     Grab Deals Now
                                 </button>
+                            </section>
+                            {/* WHY CHOOSE */}
+                            <section className="bg-white rounded-3xl shadow-lg p-10 flex flex-col items-center">
+                                <h2 className="text-3xl font-bold mb-2 text-slate-800">Why Choose Cartify?</h2>
+                                <p className="text-slate-500 mb-10 text-center max-w-xl">
+                                    A modern shopping platform built for speed, simplicity and trust.
+                                </p>
+
+                                <div className="flex flex-wrap justify-center gap-8">
+                                    {[price, wide, smooth, secure].map((img, i) => (
+                                        <div key={i} className="w-60 bg-blue-50 p-6 rounded-2xl shadow hover:shadow-xl hover:-translate-y-1 transition text-center">
+                                            <img src={img} className="h-24 mx-auto mb-4" />
+                                            <h3 className="font-semibold text-lg text-blue-700">Premium Experience</h3>
+                                        </div>
+                                    ))}
+                                </div>
                             </section>
 
                             {/* TESTIMONIALS */}

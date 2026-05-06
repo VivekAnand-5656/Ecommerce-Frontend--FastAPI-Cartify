@@ -1,12 +1,14 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { FaRegWindowClose } from 'react-icons/fa'
 import { FcBusinessman, FcNext } from 'react-icons/fc'
 import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
-    const { showProfileMenu, setShowProfileMenu } = useContext(AuthContext)
+    const { showProfileMenu, setShowProfileMenu, isLoggedIn, token } = useContext(AuthContext)
     const navigate = useNavigate()
+    
+    
     return (
         <>
             <div className={
@@ -20,7 +22,7 @@ const Profile = () => {
                 <FcBusinessman className=' text-5xl text-center ' /> 
                 <ul className=' w-full flex flex-col gap-2 ' >
                     <li 
-                    
+                    onClick={isLoggedIn?()=>navigate("myprofile"):null}
                     className=' bg-[#ffffff] px-1.5 rounded cursor-pointer w-full transition-all duration-500 ease-initial   font-semibold hover:bg-[#cacad0] flex items-center justify-around ' >View Profile <FcNext/> </li>
                     <li
                     onClick={()=>navigate("orders")}  

@@ -181,7 +181,8 @@ const AddtoCart = () => {
 
                   {/* Info */}
                   <div className="flex flex-col flex-1">
-                    <h2 className="text-lg font-semibold text-gray-800">{item.product.name}</h2>
+                    <h2 className="text-lg font-semibold text-gray-800 line-clamp-1 ">{item.product.name}</h2>
+                    <h2 className="text-[0.8rem] font-semibold text-[#837d7d] line-clamp-1 ">{item.product.description}</h2>
 
                     <div className="flex gap-3 mt-2 items-center">
                       <span className="text-xl font-bold text-blue-600">
