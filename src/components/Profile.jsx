@@ -7,28 +7,60 @@ import { useNavigate } from 'react-router-dom'
 const Profile = () => {
     const { showProfileMenu, setShowProfileMenu, isLoggedIn, token } = useContext(AuthContext)
     const navigate = useNavigate()
-    
-    
+
+
     return (
         <>
-            <div className={
-                showProfileMenu
-                    ? "fixed right-0 text-black top-15 h-[50%] w-50 bg-[#d7daf1f9] rounded-2xl shadow-lg flex flex-col items-center p-4 z-50 transition-all duration-100 ease-linear "
-                    : "hidden"
-            } >
-                <button onClick={() => setShowProfileMenu(false)} 
-                className=' text-[#f50d0d] text-2xl top-15 font-semibold cursor-pointer right-3 fixed  '
-                    > <FaRegWindowClose/> </button>
-                <FcBusinessman className=' text-5xl text-center ' /> 
-                <ul className=' w-full flex flex-col gap-2 ' >
-                    <li 
-                    onClick={isLoggedIn?()=>navigate("myprofile"):null}
-                    className=' bg-[#ffffff] px-1.5 rounded cursor-pointer w-full transition-all duration-500 ease-initial   font-semibold hover:bg-[#cacad0] flex items-center justify-around ' >View Profile <FcNext/> </li>
+            <div
+                className={
+                    showProfileMenu
+                        ? "fixed right-6 top-20 w-60 bg-white/70 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl p-5 z-50 animate-[slideIn_.35s_ease]"
+                        : "hidden"
+                }
+            >
+                {/* Close Button */}
+                <button
+                    onClick={() => setShowProfileMenu(false)}
+                    className="absolute top-3 right-4 text-red-500 text-xl hover:scale-125 transition"
+                >
+                    <FaRegWindowClose />
+                </button>
+
+                {/* Profile Icon */}
+                <div className="flex flex-col items-center gap-2 mb-5">
+                    <FcBusinessman className="text-6xl drop-shadow-md" />
+                    <p className="font-semibold text-gray-700">Welcome 👋</p>
+                </div>
+
+                {/* Menu Items */}
+                <ul className="flex flex-col gap-3">
                     <li
-                    onClick={()=>navigate("orders")}  
-                    className=' bg-[#ffffff] px-1.5 rounded cursor-pointer w-full transition-all duration-500 ease-initial  font-semibold hover:bg-[#cacad0] flex items-center justify-around ' >My Orders <FcNext/> </li>
+                        onClick={isLoggedIn ? () => navigate("myprofile") : null}
+                        className="bg-white rounded-xl px-4 py-2 flex justify-between items-center cursor-pointer shadow hover:shadow-lg hover:scale-105 transition"
+                    >
+                        <span className="font-semibold">View Profile</span>
+                        <FcNext />
+                    </li>
+
+                    <li
+                        onClick={() => navigate("orders")}
+                        className="bg-white rounded-xl px-4 py-2 flex justify-between items-center cursor-pointer shadow hover:shadow-lg hover:scale-105 transition"
+                    >
+                        <span className="font-semibold">My Orders</span>
+                        <FcNext />
+                    </li>
                 </ul>
             </div>
+
+            {/* Tailwind custom animation */}
+            <style>
+                {`
+        @keyframes slideIn {
+          from { opacity:0; transform: translateY(-20px) scale(.95); }
+          to { opacity:1; transform: translateY(0) scale(1); }
+        }
+      `}
+            </style>
         </>
     )
 }

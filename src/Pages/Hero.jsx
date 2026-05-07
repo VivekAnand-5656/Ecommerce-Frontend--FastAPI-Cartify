@@ -15,21 +15,22 @@ import sale2 from '../images/sale2.png'
 import sale3 from '../images/sale3.png'
 import cosmetic from '../images/cosm.png'
 import { FaCircleArrowRight } from "react-icons/fa6";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { toast, Bounce } from 'react-toastify'
 
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Catagories from '../components/Catagories'
 import Profile from '../components/Profile'
-import { useNavigate } from 'react-router-dom'
+import { data, useNavigate } from 'react-router-dom'
 
 const Hero = () => {
-    const { token, cartlength, setCartlength, showProfileMenu, setShowProfileMenu } = useContext(AuthContext)
+    const { token, cartlength, setCartlength, showProfileMenu, setShowProfileMenu, lengthwishlist, setLengthwishlist, iswishadd, setIswishadd } = useContext(AuthContext)
     const [products, setProducts] = useState([])
     const [newArrivalProducts, setNewArrivalProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
+    const [wishlist, setWishlist] = useState([])
 
 
     const images = [boy, boy2, boy3, boy4, boy5]
@@ -46,13 +47,12 @@ const Hero = () => {
     ]
 
     // ---- All Products Fetch ------
-    const api_base = "https://e-commerce-project-3365.onrender.com/users"
-    const BASE_URL = "https://e-commerce-project-3365.onrender.com"
+    const api_base = "https://e-commerce-project-3365.onrender.com"
     const fetchProducts = async () => {
         try {
             console.log("Started")
             setLoading(true)
-            const productRes = await axios.get(`${api_base}/products`,
+            const productRes = await axios.get(`${api_base}/users/products`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -61,8 +61,6 @@ const Hero = () => {
             )
             console.log("Products:- ", productRes.data)
             setLoading(false)
-
-
             setProducts(productRes.data)
         } catch (error) {
             console.log(`Error:- ${error}`)
@@ -75,7 +73,7 @@ const Hero = () => {
     // ------ Fetch New Arrival Products -----------
     const fetchNewArrivalProducts = async () => {
         try {
-            const arrivalRes = await axios.get(`${api_base}/allnewarrivalproducts`,
+            const arrivalRes = await axios.get(`${api_base}/users/allnewarrivalproducts`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -94,7 +92,7 @@ const Hero = () => {
     // ======= Cart Length ======
     const cartSize = async () => {
         try {
-            const sizeres = await axios.get(`${api_base}/user-cart`,
+            const sizeres = await axios.get(`${api_base}/users/user-cart`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -112,7 +110,7 @@ const Hero = () => {
     const addCart = async (id) => {
         try {
             console.log("Cart Adding.....")
-            const cartRes = await axios.post(`${api_base}/addtocart/${id}`, {},
+            const cartRes = await axios.post(`${api_base}/users/addtocart/${id}`, {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -126,7 +124,7 @@ const Hero = () => {
                 autoClose: 2000,
                 transition: Bounce
             });
-            await cartSize()
+            cartSize()
         } catch (error) {
             console.log(`Error:- ${error}`)
             toast.error("Cart not added !", {
@@ -136,7 +134,86 @@ const Hero = () => {
             });
         }
     }
+    // ==== Get Wishlist ===
+    const getWishlist = async () => {
+        try {
+            const response = await axios.get(`${api_base}/users/getwishlists`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            const datas = response.data
+            console.log("Api data:- ", datas)
+            setWishlist(datas)
+            setLengthwishlist(datas.length)
+            console.log("Len:- ", datas.length);
 
+        } catch (error) {
+            console.log(`Error:- ${error}`)
+        }
+    }
+    // ===== Add to Wishlist =====
+    const addtowishlist = async (id) => {
+        try {
+            const response = await axios.post(`${api_base}/users/addtowishlist/${id}`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            const datas = response.data
+            console.log(" Wishlist Added Successfully :- ", datas)
+
+            toast.success("Wishlist Added Successfully 🎉", {
+                position: "top-center",
+                autoClose: 1000,
+                transition: Bounce
+            });
+            setIswishadd(datas.success)
+            getWishlist()
+            fetchProducts()
+
+        } catch (error) {
+            console.log(`Error:- ${error}`)
+            toast.error("Product not added to Wishlist !", {
+                position: "top-left",
+                autoClose: 1000,
+                transition: Bounce
+            });
+        }
+    }
+
+    // ==== Remove Wishlist ====
+    const removeWishlist = async (id) => {
+        try {
+            const response = await axios.delete(`${api_base}/users/removewishlist/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            toast.success("Wishlist Removed Successfully 🎉", {
+                position: "top-center",
+                autoClose: 1000,
+                transition: Bounce
+            });
+            console.log("Remove:- ", response.data);
+            getWishlist()
+            fetchProducts()
+
+        } catch (error) {
+            console.log(`Removal Error:- ${error}`)
+            toast.error("Wishlist not Removed !", {
+                position: "top-left",
+                autoClose: 1000,
+                transition: Bounce
+            });
+        }
+    }
     useEffect(() => {
         if (!token) return
 
@@ -144,26 +221,28 @@ const Hero = () => {
             await Promise.all([
                 fetchProducts(),
                 fetchNewArrivalProducts(),
-                cartSize()
+                cartSize(),
+                getWishlist()
             ])
         }
 
         loadData()
     }, [token])
 
+
     return (
         <>
-            <div className="w-full bg-slate-100 p-6 flex flex-col gap-14 ">
+            <div className="w-full bg-slate-100 p-6 flex flex-col gap-5 ">
 
                 <Profile />
                 {/* HERO */}
-                <section className="w-full h-[75vh] bg-white rounded-3xl shadow-xl flex justify-between items-center px-10">
+                <section className="w-full h-[75vh] bg-linear-to-br from-[#000000] relative to-[#010447] rounded-3xl shadow-xl flex justify-between items-center px-10">
 
                     {/* Left Text */}
-                    <div className="w-1/2 flex flex-col gap-6">
+                    <div className="w-[40%] flex flex-col gap-6 text-white ">
                         <h1 className="text-5xl font-extrabold leading-tight">
                             <span className="text-[#1028ff]">Shop Smarter</span>
-                            <br /> Live Better with Cartify
+                            <br /> Live Better with Flexycart
                         </h1>
 
                         <p className="text-gray-600 text-lg max-w-xl">
@@ -176,22 +255,16 @@ const Hero = () => {
                     </div>
 
                     {/* Right Image Hover Gallery */}
-                    <div className="w-1/2 flex justify-center">
-                        <div className="w-full h-[85%] bg-slate-50 rounded-l-full flex justify-center items-center gap-4 overflow-hidden relative p-5">
+                    <div className="w-[50%] flex justify-center">
+                        <div className="w-full h-[85%] rounded-l-full flex justify-center items-center gap-4 p-5">
+
                             {images.map((img, index) => (
                                 <img
                                     key={index}
                                     src={img}
-                                    onMouseEnter={() => setActive(index)}
-                                    onMouseLeave={() => setActive(null)}
-                                    className={`
-              rounded-3xl object-cover transition-all duration-500 cursor-pointer
-              ${active === null && "w-[22%] h-[65%]"}
-              ${active !== null && active !== index && "w-[12%] h-[45%] opacity-40 blur-sm"}
-              ${active === index && "absolute w-[65%] h-[95%] z-20 shadow-2xl"}
-            `}
-                                />
+                                    className=" w-[22%] h-[80%] object-cover rounded-3xl transition-all duration-300 hover:-translate-y-3 hover:scale-150 hover:shadow-2xl cursor-pointer" />
                             ))}
+
                         </div>
                     </div>
 
@@ -212,27 +285,25 @@ const Hero = () => {
                 </section>
 
                 {/* CATEGORIES */}
-                <section className="flex flex-col items-center gap-8">
+                <section className="flex flex-col items-center gap-5 relative ">
                     <h2 className="text-3xl font-bold">Shop by Categories</h2>
 
-                    <div className="flex flex-wrap justify-center gap-8 bg-yellow-100 p-8 rounded-3xl shadow-inner w-full">
+                    <div className=" flex flex-wrap relative justify-center gap-8 bg-yellow-100 p-5 rounded-3xl shadow-inner w-full">
                         {catg.map(item => (
                             <div
                                 onClick={() => navigate(item.navi)}
                                 key={item.name}
-                                className="w-52 bg-white rounded-2xl p-4 flex flex-col items-center gap-3 shadow hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
-                                <img src={item.img} className="h-24" />
-                                <p className="font-semibold">{item.name}</p>
+                                className="w-25 bg-white rounded-2xl p-2 flex flex-col items-center gap-2 shadow hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+                                <img src={item.img} className="h-15 " />
+                                <p className="font-semibold text-[0.7rem] ">{item.name}</p>
                             </div>
                         ))}
                     </div>
                 </section>
 
                 {/* NEW ARRIVALS */}
-                <section className="flex flex-col items-center gap-8">
-                    {/* <h2 className="text-3xl font-bold">New Arrivals</h2> */}
-
-                    <div className="flex flex-wrap justify-center gap-8">
+                <section className="flex flex-col items-center gap-5">
+                    <div className="flex flex-wrap justify-center gap-5">
                         {newArrivalProducts.map(item => (
                             <div key={item.id}
                                 className="w-60 bg-white rounded-3xl shadow hover:shadow-2xl transition overflow-hidden relative">
@@ -250,34 +321,74 @@ const Hero = () => {
                 </section>
 
                 {/* ALL PRODUCTS */}
-                <section className="flex flex-col items-center gap-10">
-                    <h2 className="text-3xl font-bold">All Products</h2>
+                <section className="flex flex-col items-center bg-[#f4f6fb] py-2 rounded-3xl">
+
+                    {/* <h2 className="text-4xl font-bold mb-12 tracking-wide text-slate-800">
+                        All Products
+                    </h2> */}
 
                     <div className="flex flex-wrap justify-center gap-10">
+
                         {products.map(item => (
-                            <div key={item.id}
-                                className="w-64 bg-white rounded-3xl shadow-md hover:shadow-2xl transition overflow-hidden">
+                            <div
+                                key={item.id}
+                                className="relative w-[240px] bg-white p-4 rounded-3xl flex flex-col shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300"
+                            >
 
-                                <img src={item.image} className="h-56 w-full object-cover" />
-
-                                <div className="p-5">
-                                    <h3 className="font-semibold line-clamp-1 ">{item.name}</h3>
-                                    <p className=' line-clamp-1 ' >{item.description}</p>
-
-                                    <div className="flex gap-2 mt-2">
-                                        <span className="text-xl font-bold text-green-600">₹{item.disc_price}</span>
-                                        <span className="line-through text-gray-400">₹{item.price}</span>
-                                    </div>
-
-                                    <button
-                                        onClick={() => addCart(item.id)}
-                                        className="mt-4 w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl font-semibold transition">
-                                        Add to Cart
-                                    </button>
+                                {/* HEART ICON */}
+                                <div className="absolute right-4 top-4 text-xl">
+                                    {
+                                        wishlist.some(itm => itm.product_id === item.id) ? (
+                                            <FaHeart
+                                                onClick={() => {
+                                                    const wishitem = wishlist.find(w => w.product_id === item.id)
+                                                    removeWishlist(wishitem.id)
+                                                }}
+                                                className="text-red-500 cursor-pointer hover:scale-125 transition"
+                                            />
+                                        ) : (
+                                            <FaRegHeart
+                                                onClick={() => addtowishlist(item.id)}
+                                                className="cursor-pointer hover:scale-125 transition"
+                                            />
+                                        )
+                                    }
                                 </div>
+
+                                {/* IMAGE */}
+                                <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    className="h-[190px] w-full object-cover rounded-2xl"
+                                />
+
+                                {/* INFO */}
+                                <h3 className="font-semibold mt-4 line-clamp-1">{item.name}</h3>
+                                <p className="text-sm text-gray-500 line-clamp-1">
+                                    {item.description}
+                                </p>
+
+                                {/* PRICE */}
+                                <div className="flex items-center gap-2 mt-2">
+                                    <span className="text-xl font-bold text-green-600">
+                                        ₹{item.disc_price}
+                                    </span>
+                                    <span className="text-gray-400 line-through text-sm">
+                                        ₹{item.price}
+                                    </span>
+                                </div>
+
+                                {/* BUTTON */}
+                                <button
+                                    onClick={() => addCart(item.id)}
+                                    className="mt-4 bg-black hover:bg-gray-800 text-white py-2 rounded-xl font-semibold transition"
+                                >
+                                    Add to Cart
+                                </button>
 
                             </div>
                         ))}
+
                     </div>
                 </section>
 

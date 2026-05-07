@@ -1,72 +1,143 @@
-import React from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { Bounce, toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
 
 const Wishlist = () => {
+  const { token } = useContext(AuthContext)
+  const [wishlists, setWishlists] = useState([])
 
-  const wishlistItems = [
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 1499,
-      image: "https://via.placeholder.com/120"
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      price: 2499,
-      image: "https://via.placeholder.com/120"
+  const api_base = "https://e-commerce-project-3365.onrender.com"
+
+  const getWishlists = async () => {
+    try {
+      const response = await axios.get(`${api_base}/users/getwishlists`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      const datas = response.data
+      console.log("Wishlist Data:- ", datas);
+      setWishlists(datas)
+
+
+    } catch (error) {
+      console.log(`Error:- Data:-  ${error} `);
     }
-  ];
+  }
+  // ==== Remove Wishlist ====
+  const removeWishlist = async (id) => {
+    try {
+      const response = await axios.delete(`${api_base}/users/removewishlist/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      toast.success("Wishlist Removed Successfully 🎉", {
+        position: "top-center",
+        autoClose: 1000,
+        transition: Bounce
+      });
+      setWishlists(prev => prev.filter(item => item.id !== id));
+      console.log("Remove:- ", response.data);
+      getWishlists()
+
+    } catch (error) {
+      console.log(`Removal Error:- ${error}`)
+      toast.error("Wishlist not Removed !", {
+        position: "top-left",
+        autoClose: 1000,
+        transition: Bounce
+      });
+    }
+  }
+  useEffect(() => {
+    getWishlists()
+  }, [])
+
+
+
 
   return (
-    <div className="w-[70%] mx-auto mt-10">
+  <div className="w-full min-h-screen bg-[#f5f7fb] py-10 flex justify-center">
+    
+    {/* Main Card */}
+    <div className="w-[75%] bg-white rounded-3xl shadow-lg p-8">
 
-      <h1 className="text-3xl font-bold mb-6">My Wishlist ❤️</h1>
-
-      {/* Wishlist Container */}
-      <div className="border rounded p-4 h-[500px] overflow-y-scroll scrollbar-hide">
-
-        {wishlistItems.map((item) => (
-          
-          <div
-            key={item.id}
-            className="flex justify-between items-center border-b py-4"
-          >
-            
-            {/* Left Side */}
-            <div className="flex items-center gap-5">
-              <img
-                src={item.image}
-                alt=""
-                className="w-[90px] h-[90px] object-cover rounded"
-              />
-
-              <div>
-                <h2 className="text-lg font-semibold">{item.name}</h2>
-                <p className="text-gray-600">₹ {item.price}</p>
-              </div>
-            </div>
-
-            {/* Right Side Buttons */}
-            <div className="flex gap-3">
-
-              <button className="bg-green-500 text-white px-4 py-2 rounded">
-                Move to Cart
-              </button>
-
-              <button className="bg-red-500 text-white px-4 py-2 rounded">
-                Remove
-              </button>
-
-            </div>
-
-          </div>
-
-        ))}
-
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">My Wishlist ❤️</h1>
+        <span className="bg-pink-100 text-pink-600 px-4 py-1 rounded-full text-sm">
+          {wishlists.length} items
+        </span>
       </div>
 
+      {/* Wishlist Container */}
+      <div className="h-[520px] overflow-y-auto pr-2">
+
+        {wishlists.length === 0 ? (
+          <div className="h-full flex items-center justify-center text-gray-400 text-lg">
+            Your wishlist is empty 😢
+          </div>
+        ) : (
+          <div className="flex flex-col gap-5">
+
+            {wishlists.map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center bg-[#fafafa] p-4 rounded-2xl hover:shadow-md transition"
+              >
+
+                {/* LEFT SIDE */}
+                <div className="flex gap-5 items-center">
+                  <img
+                    src={item.product.image}
+                    className="w-[95px] h-[95px] object-cover rounded-xl"
+                  />
+
+                  <div className="flex flex-col gap-1">
+                    <h2 className="font-semibold text-lg">
+                      {item.product.name}
+                    </h2>
+                    <p className="text-green-600 font-bold text-lg">
+                      ₹ {item.product.disc_price}
+                    </p>
+                    <p className="text-gray-400 line-through text-sm">
+                      ₹ {item.product.price}
+                    </p>
+                  </div>
+                </div>
+
+                {/* RIGHT BUTTONS */}
+                <div className="flex gap-3">
+
+                  <button className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-xl font-medium transition">
+                    Add to Cart
+                  </button>
+
+                  <button
+                    onClick={() => removeWishlist(item.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-xl font-medium transition"
+                  >
+                    Remove
+                  </button>
+
+                </div>
+
+              </div>
+            ))}
+
+          </div>
+        )}
+
+      </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default Wishlist;

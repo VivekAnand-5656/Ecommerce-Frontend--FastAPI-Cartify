@@ -1,18 +1,63 @@
-# React + Vite
+🛍️ E-Commerce Frontend (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend of the E-Commerce web application built using React.
+It connects with the FastAPI backend and provides a complete shopping experience including authentication, product browsing, cart, wishlist and order management.
 
-Currently, two official plugins are available:
+The goal of this project was to build a fully responsive and modern UI while practicing real-world frontend architecture and state management.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+⚙️ Tech Stack
+React JS – UI library
+Tailwind CSS – Styling & responsive design
+CSS – Custom styling
+Context API – Global state management
+Axios – API integration
+React Router – Navigation & routing
+✨ Features
+🔐 Authentication
+User Signup & Login
+Protected routes
+JWT token stored in localStorage
+Logout functionality
+🏠 Home Page
+Product listing from API
+New arrival products section
+Responsive product cards
+🔍 Search & Filters
+Search products by keyword
+Filter products by category
+🛒 Cart System
+Add to cart
+Increase / decrease quantity
+Remove items
+Clear cart
+Persistent cart using backend
+❤️ Wishlist
+Add/remove products to wishlist
+Dedicated wishlist page
+📦 Orders
+Place order from cart
+View previous orders
+👤 User Profile
+View logged-in user details
+📁 Project Structure
+frontend/
+│
+├── src/
+│   ├── components/      Reusable UI components
+│   ├── pages/           Application pages
+│   ├── context/         Global state (Context API)
+│   ├── services/        API calls
+│   ├── assets/          Images & icons
+│   └── App.jsx          Main app component
+│
+├── public/
+├── package.json
+└── tailwind.config.js
+🔗 Backend API
 
-## React Compiler
+This frontend consumes the FastAPI backend.
+Make sure backend server is running before starting frontend.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) htmlFor more information.
+Default backend URL used:
 
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) htmlFor information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+https://e-commerce-project-3365.onrender.com

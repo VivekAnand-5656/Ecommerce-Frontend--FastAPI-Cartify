@@ -1,12 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { Bounce, toast } from "react-toastify";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const Womens = () => {
-    const { allProducts, token } = useContext(AuthContext)
+    const { allProducts, token, lengthwishlist, setLengthwishlist } = useContext(AuthContext)
 
-
+    const [wishlist, setWishlist] = useState([])
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("all");
     const [price, setPrice] = useState("all");
@@ -30,7 +31,7 @@ const Womens = () => {
             category === "all" ||
             product.name.toLowerCase().includes(category.toLowerCase()) ||
             product.catagory.toLowerCase().includes(category.toLowerCase()) ||
-            product.description.toLowerCase().includes(category.toLowerCase()) ;
+            product.description.toLowerCase().includes(category.toLowerCase());
 
         // 4️⃣ Price filter
         const matchesPrice =
@@ -65,44 +66,142 @@ const Womens = () => {
             });
         } catch (error) {
             console.log(`Error ${error}`);
+            toast.error("Please Login",
+                {
+                    autoClose: 1000,
+                    transition: Bounce,
+                    closeOnClick: true
+                }
+            )
+        }
+    }
+    // ==== Get Wishlist ===
+    const getWishlist = async () => {
+        try {
+            const response = await axios.get(`${api_base}/users/getwishlists`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            const datas = response.data
+            console.log("Api data:- ", datas)
+            setWishlist(datas)
+            setLengthwishlist(datas.length)
+            console.log("Len:- ", datas.length);
+
+        } catch (error) {
+            console.log(`Error:- ${error}`)
+        }
+    }
+    // ===== Add to Wishlist =====
+    const addtowishlist = async (id) => {
+        try {
+            const response = await axios.post(`${api_base}/users/addtowishlist/${id}`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            const datas = response.data
+            console.log(" Wishlist Added Successfully :- ", datas)
+
+            toast.success("Wishlist Added Successfully 🎉", {
+                position: "top-center",
+                autoClose: 1000,
+                transition: Bounce
+            });
+            getWishlist()
+
+        } catch (error) {
+            console.log(`Error:- ${error}`)
+            toast.error("Product not added to Wishlist !", {
+                position: "top-left",
+                autoClose: 1000,
+                transition: Bounce
+            });
         }
     }
 
+    // ==== Remove Wishlist ====
+    const removeWishlist = async (id) => {
+        try {
+            const response = await axios.delete(`${api_base}/users/removewishlist/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+            toast.success("Wishlist Removed Successfully 🎉", {
+                position: "top-center",
+                autoClose: 1000,
+                transition: Bounce
+            });
+            console.log("Remove:- ", response.data);
+            getWishlist()
+
+        } catch (error) {
+            console.log(`Removal Error:- ${error}`)
+            toast.error("Wishlist not Removed !", {
+                position: "top-left",
+                autoClose: 1000,
+                transition: Bounce
+            });
+        }
+    }
+    useEffect(() => {
+        getWishlist()
+    }, [])
+
     return (
-        <div className="bg-gray-100 min-h-screen p-5">
+        <div className="bg-[#f4f6fb] min-h-screen p-8">
 
-            <h1 className="text-3xl font-bold text-center mb-6">Women's Collection</h1>
+            {/* PAGE TITLE */}
+            <h1 className="text-4xl font-bold text-center mb-10 tracking-wide">
+                Women's Collection
+            </h1>
 
-            <div className="flex gap-6">
+            <div className="flex gap-8">
 
-                {/* FILTER SIDEBAR */}
-                <div className="w-[250px] bg-white p-5 rounded-xl shadow-md h-fit">
-                    <h2 className="text-xl font-semibold mb-4">Filters</h2>
+                {/* ================= FILTER SIDEBAR ================= */}
+                <div className="w-[260px] bg-white/80 backdrop-blur-lg p-6 rounded-3xl shadow-lg h-fit sticky top-5">
 
+                    <h2 className="text-2xl font-semibold mb-6">Filters</h2>
+
+                    {/* SEARCH */}
                     <input
                         type="text"
                         placeholder="Search product..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full p-2 border rounded mb-4"
+                        className="w-full p-3 border rounded-xl mb-5 focus:outline-none focus:ring-2 focus:ring-black"
                     />
 
+                    {/* CATEGORY */}
+                    <p className="text-sm font-semibold mb-1 text-gray-500">Category</p>
                     <select
-                        className="w-full p-2 border rounded mb-4"
+                        className="w-full p-3 border rounded-xl mb-5"
                         onChange={(e) => setCategory(e.target.value)}
                     >
                         <option value="all">All Category</option>
                         <option value="shirt">Shirt</option>
+                        <option value="formal">Formal</option>
+                        <option value="casual">Casual</option>
+                        <option value="suit">Suit's</option>
+                        <option value="womensandle">Sandles</option>
                         <option value="tshirt">T-Shirt</option>
                         <option value="shoe">Shoes</option>
                         <option value="cosmetic">Cosmetic</option>
                         <option value="watch">Watch</option>
                     </select>
 
-
-
+                    {/* PRICE */}
+                    <p className="text-sm font-semibold mb-1 text-gray-500">Price</p>
                     <select
-                        className="w-full p-2 border rounded"
+                        className="w-full p-3 border rounded-xl"
                         onChange={(e) => setPrice(e.target.value)}
                     >
                         <option value="all">All Price</option>
@@ -114,32 +213,71 @@ const Womens = () => {
                     </select>
                 </div>
 
-                {/* PRODUCTS FLEX WRAP */}
-                <div className="flex flex-wrap gap-6 flex-1">
+                {/* ================= PRODUCTS ================= */}
+                <div className="flex flex-wrap gap-8 flex-1">
 
                     {filteredProducts.length === 0 ? (
-                        <h2 className="text-2xl font-semibold">No Products Found 😢</h2>
+                        <div className="w-full flex justify-center items-center text-2xl text-gray-500">
+                            No Products Found 😢
+                        </div>
                     ) : (
                         filteredProducts.map(product => (
                             <div
                                 key={product.id}
-                                className="w-[220px] bg-white p-4 rounded-xl flex flex-col justify-evenly shadow hover:scale-105 transition"
+                                className="relative w-[230px] bg-white p-4 rounded-3xl flex flex-col shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300"
                             >
+
+                                {/* HEART ICON */}
+                                <div className="absolute right-4 top-4 text-xl">
+                                    {
+                                        wishlist.some(itm => itm.product_id === product.id) ? (
+                                            <FaHeart
+                                                onClick={() => {
+                                                    const wishitem = wishlist.find(w => w.product_id === product.id)
+                                                    removeWishlist(wishitem.id)
+                                                }}
+                                                className="text-red-500 cursor-pointer hover:scale-125 transition"
+                                            />
+                                        ) : (
+                                            <FaRegHeart
+                                                onClick={() => addtowishlist(product.id)}
+                                                className="cursor-pointer hover:scale-125 transition"
+                                            />
+                                        )
+                                    }
+                                </div>
+
+                                {/* IMAGE */}
                                 <img
                                     src={product.image}
                                     alt={product.name}
-                                    className="h-[180px] w-full object-cover rounded"
+                                    className="h-[180px] w-full object-cover rounded-2xl"
                                 />
 
-                                <h3 className="font-semibold mt-3 line-clamp-1 ">{product.name}</h3>
-                                <p  className=" line-clamp-1 text-[0.8rem] " >{product.description}</p>
-                                <p className="text-green-600 font-bold">₹{product.price}</p>
+                                {/* INFO */}
+                                <h3 className="font-semibold mt-4 line-clamp-1">{product.name}</h3>
+                                <p className="text-sm text-gray-500 line-clamp-1">
+                                    {product.description}
+                                </p>
 
+                                {/* PRICE */}
+                                <div className="flex items-center gap-2 mt-2">
+                                    <span className="text-xl font-bold text-green-600">
+                                        ₹{product.disc_price}
+                                    </span>
+                                    <span className="text-gray-400 line-through text-sm">
+                                        ₹{product.price}
+                                    </span>
+                                </div>
+
+                                {/* BUTTON */}
                                 <button
                                     onClick={() => addToCart(product.id)}
-                                    className="bg-black text-white w-full mt-3 py-2 rounded">
+                                    className="mt-4 bg-black hover:bg-gray-800 text-white py-2 rounded-xl font-semibold transition"
+                                >
                                     Add to Cart
                                 </button>
+
                             </div>
                         ))
                     )}

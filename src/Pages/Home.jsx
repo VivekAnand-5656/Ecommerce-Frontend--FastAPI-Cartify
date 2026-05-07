@@ -23,7 +23,7 @@ import watch from '../images/watch.png'
 import Mens from '../catagories/Mens'
 
 const Home = () => {
-    const { isLoggedIn, token, catagories,setAllProducts } = useContext(AuthContext)
+    const { isLoggedIn, token, catagories, setAllProducts } = useContext(AuthContext)
     const [products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -85,7 +85,7 @@ const Home = () => {
             });
         }
     }
-     
+
     return (
         <>
             {
@@ -93,17 +93,17 @@ const Home = () => {
                     <>
                         <Hero />
                     </>
-                ) :  catagories === "mens" ? (
-                    <Mens/>
+                ) : catagories === "mens" ? (
+                    <Mens />
                 ) : (
                     <>
                         <div className="w-full flex flex-col gap-10 p-2 bg-slate-100">
 
                             {/* HERO */}
                             <section className="w-full h-[75vh] bg-linear-to-br from-[#000000] relative to-[#010447]  text-white rounded-3xl shadow-xl flex justify-between items-center text-center p-2">
-                                <div className=' w-[40%] h-full text-justify ' >
+                                <div className=' w-[40%] h-full text-start flex flex-col justify-center ' >
                                     <h1 className="text-5xl font-extrabold leading-tight max-w-4xl">
-                                        Shop Smarter. Live Better with Cartify
+                                        Shop Smarter. Live Better with <span className='text-[#FB7513]' >Flexycart</span>
                                     </h1>
 
                                     <p className="mt-5 text-lg max-w-2xl text-blue-100">
@@ -146,45 +146,57 @@ const Home = () => {
                                 </div>
                             </section>
 
-                            
 
-                            {/* CATEGORIES */}
-                            <section className="bg-white rounded-3xl shadow-lg p-10 flex flex-col items-center">
-                                <h2 className="text-3xl font-bold mb-10 text-slate-800">Shop by Categories</h2>
 
-                                <div className="flex flex-wrap justify-center gap-10">
-                                    {[ect, fsh, sh, acc, hm, ad].map((img, i) => (
-                                        <div key={i} className="w-40 flex flex-col items-center cursor-pointer hover:scale-110 transition">
-                                            <img src={img} className="h-24" />
-                                            <p className="mt-3 font-semibold text-blue-700 text-center">Category</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
+                            {/* CATEGORIES
+                            // <section className="bg-white rounded-3xl shadow-lg p-10 flex flex-col items-center">
+                            //     <h2 className="text-3xl font-bold mb-10 text-slate-800">Shop by Categories</h2>
+
+                            //     <div className="flex flex-wrap justify-center gap-10">
+                            //         {[ect, fsh, sh, acc, hm, ad].map((img, i) => (
+                            //             <div key={i} className="w-40 flex flex-col items-center cursor-pointer hover:scale-110 transition">
+                            //                 <img src={img} className="h-24" />
+                            //                 <p className="mt-3 font-semibold text-blue-700 text-center">Category</p>
+                            //             </div>
+                            //         ))}
+                            //     </div>
+                            // </section> */}
 
                             {/* PRODUCTS */}
-                            <section className="flex flex-col items-center">
-                                <h2 className="text-3xl font-bold mb-10 text-slate-800">Trending Products</h2>
+                            <section className="flex flex-col items-center bg-[#f4f6fb] py-2 rounded-3xl">
 
-                                <div className="flex flex-wrap justify-center gap-8">
+                                <h2 className="text-3xl font-bold mb-5 tracking-wide text-slate-800">
+                                    Trending Products
+                                </h2>
+
+                                <div className="flex flex-wrap justify-center gap-10">
                                     {products.map((item) => (
-                                        <div key={item.id} className="w-64 bg-white rounded-3xl shadow-md hover:shadow-2xl transition overflow-hidden">
-                                            <img src={item.image} className="h-56 w-full object-cover" />
+                                        <div
+                                            key={item.id}
+                                            className="w-[240px] bg-white p-4 rounded-3xl flex flex-col shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300"
+                                        >
+                                            <img
+                                                src={item.image}
+                                                className="h-[190px] w-full object-cover rounded-2xl"
+                                            />
 
-                                            <div className="p-5">
-                                                <h3 className="font-semibold line-clamp-1 ">{item.name}</h3>
+                                            <h3 className="font-semibold mt-4 line-clamp-1">{item.name}</h3>
 
-                                                <div className="flex gap-2 mt-2">
-                                                    <span className="text-xl font-bold text-blue-600">₹{item.disc_price}</span>
-                                                    <span className="text-gray-400 line-through">₹{item.price}</span>
-                                                </div>
-
-                                                <button
-                                                    onClick={() => addCart(item.id)}
-                                                    className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold transition">
-                                                    Add to Cart
-                                                </button>
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <span className="text-xl font-bold text-green-600">
+                                                    ₹{item.disc_price}
+                                                </span>
+                                                <span className="text-gray-400 line-through text-sm">
+                                                    ₹{item.price}
+                                                </span>
                                             </div>
+
+                                            <button
+                                                onClick={() => addCart(item.id)}
+                                                className="mt-4 bg-black hover:bg-gray-800 text-white py-2 rounded-xl font-semibold transition"
+                                            >
+                                                Add to Cart
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
@@ -192,7 +204,7 @@ const Home = () => {
 
                             {/* FEATURES */}
                             <section className="bg-white rounded-3xl shadow-lg p-10 flex flex-col items-center">
-                                <h2 className="text-3xl font-bold mb-10 text-slate-800">What Makes Cartify Special?</h2>
+                                <h2 className="text-3xl font-bold mb-10 text-slate-800">What Makes Flexycart Special?</h2>
 
                                 <div className="flex flex-wrap justify-center gap-6">
                                     {["⚡ Fast Checkout", "🔒 Secure Payments", "🚚 Fast Delivery", "🔄 Easy Returns", "💬 24/7 Support"].map((f, i) => (
@@ -213,7 +225,7 @@ const Home = () => {
                             </section>
                             {/* WHY CHOOSE */}
                             <section className="bg-white rounded-3xl shadow-lg p-10 flex flex-col items-center">
-                                <h2 className="text-3xl font-bold mb-2 text-slate-800">Why Choose Cartify?</h2>
+                                <h2 className="text-3xl font-bold mb-2 text-slate-800">Why Choose Flexycart?</h2>
                                 <p className="text-slate-500 mb-10 text-center max-w-xl">
                                     A modern shopping platform built for speed, simplicity and trust.
                                 </p>

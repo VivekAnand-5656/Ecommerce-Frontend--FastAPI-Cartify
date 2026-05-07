@@ -32,47 +32,81 @@ const Orders = () => {
   }, [])
 
   return (
-    <div className='w-full min-h-screen p-10 bg-gray-100'>
-      <h1 className='text-3xl font-bold mb-6'>My Orders</h1>
+    <div className="bg-[#f4f6fb] min-h-screen p-8">
+
+      <h1 className="text-4xl font-bold mb-10 text-center tracking-wide">
+        My Orders
+      </h1>
 
       {myOrders.length === 0 && (
-        <p>No orders yet</p>
+        <div className="text-center text-gray-500 text-xl">
+          No orders yet 😢
+        </div>
       )}
 
-      {myOrders.map((order) => (
-        <div key={order.order_id} className='mb-10 bg-white p-6 rounded shadow'>
+      <div className="flex flex-col gap-8">
+        {myOrders.map((order) => (
+          <div
+            key={order.order_id}
+            className="bg-white rounded-3xl p-6 shadow-md hover:shadow-xl transition"
+          >
 
-          {/* Order Header */}
-          <div className='flex justify-between mb-4 border-b pb-2'>
-            <h2 className='font-bold'>Order ID: {order.order_id}</h2>
-            <p>Status: {order.status}</p>
-            <p>Total: ₹{order.total_price}</p>
-          </div>
-
-          {/* Order Items */}
-          <div className='grid grid-cols-2 gap-6'>
-            {order.items.map((item, index) => (
-              <div key={index} className='flex gap-4 border p-4 rounded'>
-
-                <img
-                  src={item.product.image}
-                  alt={item.product.name}
-                  className='w-28 h-28 object-cover rounded'
-                />
-
-                <div>
-                  <h3 className='font-bold text-lg'>{item.product.name}</h3>
-                  <p className='text-gray-600'>{item.product.description}</p>
-                  <p className='font-semibold'>₹{item.product.price}</p>
-                  <p>Qty: {item.quantity}</p>
-                </div>
-
+            {/* ORDER HEADER */}
+            <div className="flex flex-wrap justify-between items-center gap-3 border-b pb-4 mb-6">
+              <div>
+                <p className="text-sm text-gray-500">Order ID</p>
+                <p className="font-semibold">{order.order_id}</p>
               </div>
-            ))}
-          </div>
 
-        </div>
-      ))}
+              <div>
+                <p className="text-sm text-gray-500">Status</p>
+                <p className="font-semibold text-green-600">{order.status}</p>
+              </div>
+
+              <div>
+                <p className="text-sm text-gray-500">Total</p>
+                <p className="font-bold text-lg">₹{order.total_price}</p>
+              </div>
+            </div>
+
+            {/* ORDER ITEMS */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {order.items.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex gap-4 bg-gray-50 p-3 rounded-2xl hover:shadow-md transition"
+                >
+                  <img
+                    src={item.product.image}
+                    alt={item.product.name}
+                    className="w-20 h-20 object-cover rounded-xl"
+                  />
+
+                  <div className="flex flex-col justify-between">
+                    <h3 className="font-semibold text-sm line-clamp-1">
+                      {item.product.name}
+                    </h3>
+
+                    <p className="text-xs text-gray-500 line-clamp-1">
+                      {item.product.description}
+                    </p>
+
+                    <div className="flex justify-between text-sm mt-1">
+                      <span className="font-semibold text-green-600">
+                        ₹{item.product.price}
+                      </span>
+                      <span className="text-gray-600">
+                        Qty: {item.quantity}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

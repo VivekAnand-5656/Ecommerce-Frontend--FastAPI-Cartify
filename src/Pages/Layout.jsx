@@ -7,7 +7,7 @@ const Layout = () => {
   return (
     <>
       <header className=' fixed top-0 w-full z-50  ' ><Navbar /></header>
-      <main  className='hero mt-[10vh] ' ><Outlet /></main>
+      <main  className='hero mt-[10vh] bg-[#EAEEF2] ' ><Outlet /></main>
       <footer><Footer /></footer>
     </>
   )
