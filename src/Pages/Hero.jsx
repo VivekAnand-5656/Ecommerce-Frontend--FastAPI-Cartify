@@ -232,37 +232,37 @@ const Hero = () => {
 
     return (
         <>
-            <div className="w-full bg-slate-100 p-6 flex flex-col gap-5 ">
+            <div className="w-full bg-slate-100 lg:p-6 p-1.5 flex flex-col gap-5 ">
 
                 <Profile />
                 {/* HERO */}
-                <section className="w-full h-[75vh] bg-linear-to-br from-[#000000] relative to-[#010447] rounded-3xl shadow-xl flex justify-between items-center px-10">
+                <section className="lg:w-full w-full lg:h-[75vh] h-auto bg-linear-to-br from-[#000000] relative to-[#010447] lg:rounded-3xl rounded-2xl shadow-xl lg:flex flex-col lg:justify-between justify-center items-center lg:px-10 px-2 ">
 
                     {/* Left Text */}
-                    <div className="w-[40%] flex flex-col gap-6 text-white ">
-                        <h1 className="text-5xl font-extrabold leading-tight">
-                            <span className="text-[#1028ff]">Shop Smarter</span>
+                    <div className="lg:w-[40%] w-full h-[45%] lg:h-auto flex  flex-col lg:gap-6 gap-2 text-white ">
+                        <h1 className="lg:text-5xl text-5xl  font-extrabold leading-tight">
+                            <span className="text-[#ffef10]">Shop Smarter</span>
                             <br /> Live Better with Flexycart
                         </h1>
 
-                        <p className="text-gray-600 text-lg max-w-xl">
+                        <p className="text-gray-600 lg:text-lg text-xl max-w-xl">
                             Your one-stop destination for electronics, fashion, gadgets and daily essentials.
                         </p>
 
-                        <p className="text-sm text-gray-400">
+                        <p className="lg:text-sm text-xl text-gray-400">
                             Fast delivery • Best prices • Trusted quality
                         </p>
                     </div>
 
                     {/* Right Image Hover Gallery */}
-                    <div className="w-[50%] flex justify-center">
-                        <div className="w-full h-[85%] rounded-l-full flex justify-center items-center gap-4 p-5">
+                    <div className="lg:w-[50%] w-full lg:h-auto h-[40%] flex justify-center">
+                        <div className="w-full lg:h-[85%] h-full lg:rounded-l-full flex  justify-center overflow-scroll  items-center lg:gap-4 gap-2 p-5">
 
                             {images.map((img, index) => (
                                 <img
                                     key={index}
                                     src={img}
-                                    className=" w-[22%] h-[80%] object-cover rounded-3xl transition-all duration-300 hover:-translate-y-3 hover:scale-150 hover:shadow-2xl cursor-pointer" />
+                                    className=" lg:w-[22%] w-[25%] lg:h-[80%] h-[60%] scroll-smooth object-cover lg:rounded-3xl rounded-2xl transition-all duration-300 hover:-translate-y-3 hover:scale-150 hover:shadow-2xl cursor-pointer" />
                             ))}
 
                         </div>
@@ -273,28 +273,28 @@ const Hero = () => {
                 {/* MEGA SALE CAROUSEL */}
                 <section className="flex justify-center">
                     <Carousel
-                        className="w-[75%] rounded-3xl overflow-hidden shadow-xl"
+                        className="lg:w-[75%] w-full lg:rounded-3xl rounded overflow-hidden shadow-xl"
                         autoPlay infiniteLoop showThumbs={false} showStatus={false} interval={3000}
                     >
                         {[sale1, sale2, sale3].map((img, i) => (
                             <div key={i}>
-                                <img src={img} className="h-[420px] w-full object-cover" />
+                                <img src={img} className="lg:h-[420px] h-70 w-full object-cover" />
                             </div>
                         ))}
                     </Carousel>
                 </section>
 
                 {/* CATEGORIES */}
-                <section className="flex flex-col items-center gap-5 relative ">
-                    <h2 className="text-3xl font-bold">Shop by Categories</h2>
+                <section className="flex flex-col items-center lg:gap-5 gap-2 relative ">
+                    <h2 className="lg:text-3xl text-2xl font-bold">Shop by Categories</h2>
 
-                    <div className=" flex flex-wrap relative justify-center gap-8 bg-yellow-100 p-5 rounded-3xl shadow-inner w-full">
+                    <div className=" flex flex-wrap relative justify-center lg:gap-8 gap-2 bg-yellow-100 lg:p-5 p-2 rounded-3xl shadow-inner w-full">
                         {catg.map(item => (
                             <div
                                 onClick={() => navigate(item.navi)}
                                 key={item.name}
-                                className="w-25 bg-white rounded-2xl p-2 flex flex-col items-center gap-2 shadow hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
-                                <img src={item.img} className="h-15 " />
+                                className="lg:w-25 w-20 bg-white lg:rounded-2xl rounded p-2 flex flex-col items-center gap-2 shadow hover:shadow-xl hover:-translate-y-1 transition cursor-pointer">
+                                <img src={item.img} className="lg:h-15 h-10 " />
                                 <p className="font-semibold text-[0.7rem] ">{item.name}</p>
                             </div>
                         ))}
