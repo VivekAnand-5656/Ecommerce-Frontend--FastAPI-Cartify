@@ -97,10 +97,10 @@ const Home = () => {
                     <Mens />
                 ) : (
                     <>
-                        <div className="min-w-screen flex flex-col lg:gap-10 gap-3 p-2 bg-slate-100">
+                        <div className="min-w-screen flex flex-col  lg:gap-10 gap-3 p-2 bg-slate-100">
 
                             {/* HERO */}
-                            <section className=" w-full  lg:h-[75vh] h-screen bg-linear-to-br from-[#000000] relative to-[#010447]  text-white lg:rounded-3xl rounded-br-4xl shadow-xl lg:flex flex-col justify-between items-center text-center p-2">
+                            <section className=" w-full  lg:h-[75vh] h-screen bg-linear-to-br from-[#000000] relative to-[#010447]  text-white lg:rounded-3xl rounded-br-4xl shadow-xl lg:flex-row flex flex-col lg:justify-center justify-between items-center text-center p-2">
                                 <div className='lg:w-[40%] w-full h-[40%] lg:text-start text-justify flex flex-col  justify-center ' >
                                     <h1 className="lg:text-5xl text-xl font-extrabold leading-tight lg:max-w-xl ">
                                         Shop Smarter. Live Better with <span className='text-[#FB7513]' >Flexycart</span>
@@ -123,7 +123,7 @@ const Home = () => {
                                         Fast delivery • Best prices • Trusted quality
                                     </p>
                                 </div>
-                                <div className="  lg:w-[60%] w-full lg:h-full h-[55%] relative flex justify-center items-center">
+                                <div className="  lg:w-[50%] w-full lg:h-full h-[55%] relative flex justify-center items-center">
 
                                     {/* Glow background */}
                                     <div className="  absolute w-[420px] h-[420px] bg-blue-500/20 blur-3xl rounded-full"></div>

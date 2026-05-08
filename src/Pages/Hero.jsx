@@ -236,7 +236,7 @@ const Hero = () => {
 
                 <Profile />
                 {/* HERO */}
-                <section className="lg:w-full w-full lg:h-[75vh] h-auto bg-linear-to-br from-[#000000] relative to-[#010447] lg:rounded-3xl rounded-2xl shadow-xl lg:flex flex-col lg:justify-between justify-center items-center lg:px-10 px-2 ">
+                <section className="lg:w-full w-full lg:h-[75vh] h-auto bg-linear-to-br from-[#000000] relative to-[#010447] lg:rounded-3xl rounded-2xl shadow-xl lg:flex-row flex flex-col lg:justify-between justify-center items-center lg:px-10 px-2 ">
 
                     {/* Left Text */}
                     <div className="lg:w-[40%] w-full h-[45%] lg:h-auto flex  flex-col lg:gap-6 gap-2 text-white ">
@@ -255,8 +255,8 @@ const Hero = () => {
                     </div>
 
                     {/* Right Image Hover Gallery */}
-                    <div className="lg:w-[50%] w-full lg:h-auto h-[40%] flex justify-center">
-                        <div className="w-full lg:h-[85%] h-full lg:rounded-l-full flex  justify-center overflow-scroll  items-center lg:gap-4 gap-2 p-5">
+                    <div className="lg:w-[50%]  w-full lg:h-auto h-[40%] flex justify-center">
+                        <div className="w-full lg:h-[85%] h-full lg:rounded-l-full flex  justify-center overflow-scroll lg:overflow-hidden   items-center lg:gap-4 gap-2 p-5">
 
                             {images.map((img, index) => (
                                 <img
@@ -327,12 +327,12 @@ const Hero = () => {
                         All Products
                     </h2> */}
 
-                    <div className="flex flex-wrap justify-center gap-10">
+                    <div className="flex flex-wrap justify-center lg:gap-10 gap-5">
 
                         {products.map(item => (
                             <div
                                 key={item.id}
-                                className="relative w-[240px] bg-white p-4 rounded-3xl flex flex-col shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300"
+                                className="relative lg:w-[240px] w-48 bg-white p-4 rounded-3xl flex flex-col shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300"
                             >
 
                                 {/* HEART ICON */}

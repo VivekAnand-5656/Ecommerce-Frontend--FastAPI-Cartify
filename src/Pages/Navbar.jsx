@@ -42,13 +42,13 @@ const Navbar = () => {
 
             {/* SEARCH */}
             <div 
-            className=' lg-w[40%] w-[70%] relative '>
+            className=' lg:w-[40%] w-[50%] relative '>
                 <input
                     type="search"
                     onKeyDown={handleSearch}
                     // onChange={(e)=>}
                     placeholder="Search products..."
-                    className="w-full pl-4 pr-4 py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-[#f6f9ff]"
+                    className="lg:w-full pl-2 h-full pr-4 py-2 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-[#f6f9ff]"
                 />
             </div>
 
