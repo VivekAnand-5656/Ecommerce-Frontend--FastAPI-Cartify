@@ -97,16 +97,16 @@ const Home = () => {
                     <Mens />
                 ) : (
                     <>
-                        <div className="w-full flex flex-col gap-10 p-2 bg-slate-100">
+                        <div className="min-w-screen flex flex-col lg:gap-10 gap-3 p-2 bg-slate-100">
 
                             {/* HERO */}
-                            <section className="w-full h-[75vh] bg-linear-to-br from-[#000000] relative to-[#010447]  text-white rounded-3xl shadow-xl flex justify-between items-center text-center p-2">
-                                <div className=' w-[40%] h-full text-start flex flex-col justify-center ' >
-                                    <h1 className="text-5xl font-extrabold leading-tight max-w-4xl">
+                            <section className=" w-full  lg:h-[75vh] h-screen bg-linear-to-br from-[#000000] relative to-[#010447]  text-white lg:rounded-3xl rounded-br-4xl shadow-xl lg:flex flex-col justify-between items-center text-center p-2">
+                                <div className='lg:w-[40%] w-full h-[40%] lg:text-start text-justify flex flex-col  justify-center ' >
+                                    <h1 className="lg:text-5xl text-xl font-extrabold leading-tight lg:max-w-xl ">
                                         Shop Smarter. Live Better with <span className='text-[#FB7513]' >Flexycart</span>
                                     </h1>
 
-                                    <p className="mt-5 text-lg max-w-2xl text-blue-100">
+                                    <p className="lg:mt-5 text-xl lg:text-lg  lg:max-w-2xl text-blue-100">
                                         Your one-stop eCommerce destination for electronics, fashion, gadgets and daily essentials.
                                     </p>
 
@@ -119,27 +119,27 @@ const Home = () => {
                                         </button>
                                     </div> */}
 
-                                    <p className="mt-6 text-sm text-blue-100">
+                                    <p className="lg:mt-6 mt-0 text-sm text-blue-100">
                                         Fast delivery • Best prices • Trusted quality
                                     </p>
                                 </div>
-                                <div className="w-[60%] h-full relative flex justify-center items-center">
+                                <div className="  lg:w-[60%] w-full lg:h-full h-[55%] relative flex justify-center items-center">
 
                                     {/* Glow background */}
-                                    <div className="absolute w-[420px] h-[420px] bg-blue-500/20 blur-3xl rounded-full"></div>
+                                    <div className="  absolute w-[420px] h-[420px] bg-blue-500/20 blur-3xl rounded-full"></div>
 
                                     {/* Main phone card */}
-                                    <div className="absolute top-12 left-50 w-56 h-72 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-4 rotate-[-10deg] hover:z-50 hover:scale-110 ease-linear cursor-pointer hover:rotate-0 transition duration-200">
+                                    <div className="absolute top-5 left-35 lg:w-48 w-40 lg:h-60 h-36 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-4 rotate-[-10deg] hover:z-50 hover:scale-110 ease-linear cursor-pointer hover:rotate-0 transition duration-200">
                                         <img src={mobile} className="w-full h-full object-contain drop-shadow-2xl" />
                                     </div>
 
                                     {/* Watch card */}
-                                    <div className="absolute bottom-10 left-5 w-48 h-60 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-4 rotate-12 hover:z-50 hover:scale-110 ease-linear cursor-pointer  hover:rotate-0 transition duration-500">
+                                    <div className="absolute bottom-30 left-5 lg:w-48 w-40 lg:h-60 h-36 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 lg:p-4 p-2 rotate-12 hover:z-50 hover:scale-110 ease-linear cursor-pointer  hover:rotate-0 transition duration-500">
                                         <img src={watch} className="w-full h-full object-contain drop-shadow-2xl" />
                                     </div>
 
                                     {/* Glasses card */}
-                                    <div className="absolute top-10 right-20 w-52 h-64 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-4 rotate-[8deg] hover:z-50 hover:scale-110 ease-linear cursor-pointer hover:rotate-0 transition duration-500">
+                                    <div className="absolute top-25 right-25 lg:w-48 w-40 lg:h-60 h-36 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-4 rotate-[8deg] hover:z-50 hover:scale-110 ease-linear cursor-pointer hover:rotate-0 transition duration-500">
                                         <img src={chasma} className="w-full h-full object-contain drop-shadow-2xl" />
                                     </div>
 
@@ -165,15 +165,15 @@ const Home = () => {
                             {/* PRODUCTS */}
                             <section className="flex flex-col items-center bg-[#f4f6fb] py-2 rounded-3xl">
 
-                                <h2 className="text-3xl font-bold mb-5 tracking-wide text-slate-800">
+                                <h2 className="lg:text-3xl text-xl font-bold lg:mb-5 mb-2 tracking-wide text-slate-800">
                                     Trending Products
                                 </h2>
 
-                                <div className="flex flex-wrap justify-center gap-10">
+                                <div className="flex flex-wrap justify-center lg:gap-10 gap-5 ">
                                     {products.map((item) => (
                                         <div
                                             key={item.id}
-                                            className="w-[240px] bg-white p-4 rounded-3xl flex flex-col shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300"
+                                            className="lg:w-[240px] w-48 bg-white p-4 rounded-3xl flex flex-col shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300"
                                         >
                                             <img
                                                 src={item.image}

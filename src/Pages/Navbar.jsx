@@ -7,14 +7,15 @@ import { AuthContext } from '../context/AuthContext';
 import Sidebar from '../catagories/Sidebar';
 import logo from '../images/logo.png'
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { AiFillCloseSquare } from 'react-icons/ai';
 
 const Navbar = () => {
     const navigate = useNavigate()
     const { isLoggedIn, logout, cartlength, showProfileMenu, setShowProfileMenu, catagories, setCatagories, allProducts, searchQuery, setSearchQuery, lengthwishlist } = useContext(AuthContext)
     // const [searchData,setSearchData] = {}
-     
-    const [isHam,setIsHam] = useState(false)
-    const hamstart = ()=>{
+
+    const [isHam, setIsHam] = useState(false)
+    const hamstart = () => {
         setIsHam(prev => !prev)
     }
 
@@ -30,17 +31,18 @@ const Navbar = () => {
         }
     }
     return (
-        <div className="w-full h-[10vh] sticky top-0 z-50 backdrop-blur-lg bg-white/80 shadow-lg flex justify-between items-center px-6">
+        <div className="w-full h-[10vh] sticky top-0 z-50 backdrop-blur-lg bg-white/80 shadow-lg flex justify-between items-center lg:px-6 px-2 ">
             {/* ===== Sidebar Catagories ======= */}
             <Sidebar />
             {/* LOGO */}
-            <div className="flex items-center w-[10%]">
+            <div className="flex items-center lg:w-[10%] w-[25%] ">
                 <img src={logo} alt={logo}
                     className='  ' />
             </div>
 
             {/* SEARCH */}
-            <div className="w-[40%] relative">
+            <div 
+            className=' lg-w[40%] w-[70%] relative '>
                 <input
                     type="search"
                     onKeyDown={handleSearch}
@@ -51,7 +53,22 @@ const Navbar = () => {
             </div>
 
             {/* MENU */}
-            <ul className="w-[10%] flex justify-around items-center gap-7 font-semibold text-gray-700">
+
+            <ul
+                className={` ${isHam ? "top-12 left-[25%] " : "-top-30 left-[25%] "}
+                    lg:top-0
+                    absolute lg:static
+                    left-0 w-[50%] lg:w-auto
+                    flex flex-col lg:flex-row
+                    items-center gap-7
+                    font-semibold text-gray-700
+                bg-white lg:bg-transparent
+                    shadow-lg lg:shadow-none
+                    p-6 lg:p-0
+                    transition-all duration-300
+                    rounded-2xl
+                `}
+            >
 
                 <li>
                     <NavLink
@@ -81,7 +98,21 @@ const Navbar = () => {
             </ul>
 
             {/* ICONS */}
-            <div className="flex items-center gap-6">
+            <div
+                className={` ${isHam ? "top-24 left-[25%] " : "-top-30 left-[25%] "}
+                    lg:top-0
+                    absolute lg:static
+                    left-0 w-[50%] lg:w-auto
+                    flex flex-col lg:flex-row
+                    items-center gap-7
+                    font-semibold text-gray-700
+                    bg-white lg:bg-transparent
+                    shadow-lg lg:shadow-none
+                    p-6 lg:p-0
+                    transition-all duration-300
+                    rounded-2xl
+                `} 
+            >
 
                 {/* Wishlist */}
                 <div className="relative cursor-pointer">
@@ -107,7 +138,21 @@ const Navbar = () => {
 
             {/* AUTH */}
             {isLoggedIn ? (
-                <div className="flex items-center gap-4">
+                <div 
+                className={` ${isHam ? "top-48 left-[25%] " : "-top-40 left-[25%] "}
+                    lg:top-0
+                    absolute lg:static
+                    left-0 w-[50%] lg:w-auto
+                    flex flex-col lg:flex-row
+                    items-center gap-7 
+                    bg-white lg:bg-transparent
+                    shadow-lg lg:shadow-none
+                    p-6 lg:p-0
+                    transition-all duration-300
+                    rounded-2xl
+                `}
+                // className="flex items-center gap-4"
+                >
                     <button
                         onClick={logout}
                         className="px-4 py-1.5 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white rounded-xl font-semibold transition">
@@ -118,7 +163,21 @@ const Navbar = () => {
                         className="text-3xl text-blue-900 cursor-pointer" />
                 </div>
             ) : (
-                <div className="flex gap-3">
+                <div 
+                className={` ${isHam ? "top-48 left-[25%] " : "-top-45 left-[25%] "}
+                    lg:top-0
+                    absolute lg:static
+                    left-0 w-[50%] lg:w-auto
+                    flex flex-col lg:flex-row
+                    items-center gap-7 
+                    bg-white lg:bg-transparent
+                    shadow-lg lg:shadow-none
+                    p-6 lg:p-0
+                    transition-all duration-300
+                    rounded-2xl
+                `}
+                // className="flex gap-3"
+                >
                     <button
                         onClick={() => navigate("signup")}
                         className="px-4 py-1.5 border border-blue-600 cursor-pointer text-blue-600 rounded-xl hover:bg-blue-50 transition">
@@ -132,9 +191,19 @@ const Navbar = () => {
                 </div>
             )}
 
-            <GiHamburgerMenu
-            onClick={hamstart}
-            className=" lg:hidden text-red-500 " />
+            {
+                isHam ? (
+                    <AiFillCloseSquare
+                        className='text-red-500 lg:hidden cursor-pointer '
+                        onClick={hamstart} />
+
+                ) : (
+
+                    <GiHamburgerMenu
+                        onClick={hamstart}
+                        className=" lg:hidden text-red-500 cursor-pointer " />
+                )
+            }
 
         </div>
     )
