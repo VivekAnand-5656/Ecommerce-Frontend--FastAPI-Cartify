@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { FaRegHeart } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
@@ -6,12 +6,17 @@ import { FaUserCircle } from "react-icons/fa";
 import { AuthContext } from '../context/AuthContext';
 import Sidebar from '../catagories/Sidebar';
 import logo from '../images/logo.png'
+import { GiHamburgerMenu } from 'react-icons/gi';
 
 const Navbar = () => {
     const navigate = useNavigate()
     const { isLoggedIn, logout, cartlength, showProfileMenu, setShowProfileMenu, catagories, setCatagories, allProducts, searchQuery, setSearchQuery, lengthwishlist } = useContext(AuthContext)
     // const [searchData,setSearchData] = {}
-    // ====== Search Baki hai =======
+     
+    const [isHam,setIsHam] = useState(false)
+    const hamstart = ()=>{
+        setIsHam(prev => !prev)
+    }
 
     const handleSearch = (e) => {
         if (e.key === "Enter") {
@@ -126,6 +131,10 @@ const Navbar = () => {
                     </button>
                 </div>
             )}
+
+            <GiHamburgerMenu
+            onClick={hamstart}
+            className=" lg:hidden text-red-500 " />
 
         </div>
     )
