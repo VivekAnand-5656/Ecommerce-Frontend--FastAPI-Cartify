@@ -63,10 +63,10 @@ const Wishlist = () => {
 
 
   return (
-  <div className="w-full min-h-screen bg-[#f5f7fb] py-10 flex justify-center">
+  <div className="w-full min-h-screen bg-[#f5f7fb] sm:py-10 flex justify-center">
     
     {/* Main Card */}
-    <div className="w-[75%] bg-white rounded-3xl shadow-lg p-8">
+    <div className="sm:w-[75%] w-[95%] bg-white rounded-3xl shadow-lg p-8">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -84,36 +84,40 @@ const Wishlist = () => {
             Your wishlist is empty 😢
           </div>
         ) : (
-          <div className="flex flex-col gap-5">
+          <div className="flex sm:flex-col flex-row justify-evenly flex-wrap sm:gap-5 gap-2 ">
 
             {wishlists.map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between items-center bg-[#fafafa] p-4 rounded-2xl hover:shadow-md transition"
+                className="flex sm:flex-row flex-col w-[45%] h-[250px] justify-between items-center border bg-[#fafafa] sm:p-4 rounded p-1.5  sm:rounded-2xl hover:shadow-md transition"
               >
 
                 {/* LEFT SIDE */}
-                <div className="flex gap-5 items-center">
+                <div className="sm:w-auto w-full flex sm:flex-row flex-col  sm:gap-5 gap-1.5 items-center">
                   <img
                     src={item.product.image}
-                    className="w-[95px] h-[95px] object-cover rounded-xl"
+                    className="sm:w-[95px] sm:h-[95px] border w-full h-[50%] object-cover rounded-xl"
+                    // =========  yhi se heights fixed krni hai 
+                    
                   />
 
-                  <div className="flex flex-col gap-1">
-                    <h2 className="font-semibold text-lg">
+                  <div className="w-full border flex flex-col gap-1">
+                    <h2 className="font-semibold sm:text-lg text-[0.9rem] line-clamp-1 ">
                       {item.product.name}
                     </h2>
-                    <p className="text-green-600 font-bold text-lg">
+                    <span className="flex w-full justify-between " >
+                      <p className="text-green-600 font-bold sm:text-lg text-[1rem] ">
                       ₹ {item.product.disc_price}
                     </p>
                     <p className="text-gray-400 line-through text-sm">
                       ₹ {item.product.price}
                     </p>
+                    </span>
                   </div>
                 </div>
 
                 {/* RIGHT BUTTONS */}
-                <div className="flex gap-3">
+                <div className=" w-full border flex sm:flex-row flex-col gap-3">
 
                   <button className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-xl font-medium transition">
                     Add to Cart
